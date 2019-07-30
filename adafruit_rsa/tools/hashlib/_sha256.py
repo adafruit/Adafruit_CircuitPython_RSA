@@ -245,20 +245,3 @@ class sha224(sha256):
         new = sha224()
         new._sha = self._sha.copy()
         return new
-
-def test():
-    a_str = "just a test string"
-    
-    assert b"\xe3\xb0\xc4B\x98\xfc\x1c\x14\x9a\xfb\xf4\xc8\x99o\xb9$'\xaeA\xe4d\x9b\x93L\xa4\x95\x99\x1bxR\xb8U" == sha256().digest()
-    assert 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' == sha256().hexdigest()
-    assert 'd7b553c6f09ac85d142415f857c5310f3bbbe7cdd787cce4b985acedd585266f' == sha256(a_str).hexdigest()
-    assert '8113ebf33c97daa9998762aacafe750c7cefc2b2f173c90c59663a57fe626f21' == sha256(a_str*7).hexdigest()
-    
-    s = sha256(a_str)
-    s.update(a_str)
-    assert '03d9963e05a094593190b6fc794cb1a3e1ac7d7883f0b5855268afeccc70d461' == s.hexdigest()
-
-if __name__ == "__main__":
-    test()
-
-
