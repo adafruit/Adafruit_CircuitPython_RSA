@@ -20,8 +20,8 @@
 
 import os
 
-from rsa import common, transform
-from rsa._compat import byte
+from adafruit_rsa.rsa import common, transform
+from adafruit_rsa.rsa._compat import byte
 
 
 def read_random_bits(nbits):

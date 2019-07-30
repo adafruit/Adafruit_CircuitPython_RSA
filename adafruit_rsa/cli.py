@@ -25,10 +25,10 @@ import abc
 import sys
 from optparse import OptionParser
 
-import rsa
-import rsa.pkcs1
+import adafruit_rsa.rsa
+import adafruit_rsa.rsa.pkcs1
 
-HASH_METHODS = sorted(rsa.pkcs1.HASH_METHODS.keys())
+HASH_METHODS = sorted(adafruit_rsa.rsa.pkcs1.HASH_METHODS.keys())
 
 
 def keygen():
@@ -65,7 +65,7 @@ def keygen():
         raise SystemExit(1)
 
     print('Generating %i-bit key' % keysize, file=sys.stderr)
-    (pub_key, priv_key) = rsa.newkeys(keysize)
+    (pub_key, priv_key) = adafruit_rsa.rsa.newkeys(keysize)
 
     # Save public key
     if cli.pubout:
@@ -83,7 +83,7 @@ def keygen():
             outfile.write(data)
     else:
         print('Writing private key to stdout', file=sys.stderr)
-        rsa._compat.write_to_stdout(data)
+        adafruit_rsa.rsa._compat.write_to_stdout(data)
 
 
 class CryptoOperation(object):
@@ -104,7 +104,7 @@ class CryptoOperation(object):
     expected_cli_args = 1
     has_output = True
 
-    key_class = rsa.PublicKey
+    key_class = adafruit_rsa.rsa.PublicKey
 
     def __init__(self):
         self.usage = self.usage % self.__class__.__dict__
@@ -189,7 +189,7 @@ class CryptoOperation(object):
                 outfile.write(outdata)
         else:
             print('Writing output to stdout', file=sys.stderr)
-            rsa._compat.write_to_stdout(outdata)
+            adafruit_rsa.rsa._compat.write_to_stdout(outdata)
 
 
 class EncryptOperation(CryptoOperation):
@@ -205,7 +205,7 @@ class EncryptOperation(CryptoOperation):
     def perform_operation(self, indata, pub_key, cli_args=None):
         """Encrypts files."""
 
-        return rsa.encrypt(indata, pub_key)
+        return adafruit_rsa.rsa.encrypt(indata, pub_key)
 
 
 class DecryptOperation(CryptoOperation):
@@ -217,12 +217,12 @@ class DecryptOperation(CryptoOperation):
     operation = 'decrypt'
     operation_past = 'decrypted'
     operation_progressive = 'decrypting'
-    key_class = rsa.PrivateKey
+    key_class = adafruit_rsa.rsa.PrivateKey
 
     def perform_operation(self, indata, priv_key, cli_args=None):
         """Decrypts files."""
 
-        return rsa.decrypt(indata, priv_key)
+        return adafruit_rsa.rsa.decrypt(indata, priv_key)
 
 
 class SignOperation(CryptoOperation):
@@ -235,7 +235,7 @@ class SignOperation(CryptoOperation):
     operation = 'sign'
     operation_past = 'signature'
     operation_progressive = 'Signing'
-    key_class = rsa.PrivateKey
+    key_class = adafruit_rsa.rsa.PrivateKey
     expected_cli_args = 2
 
     output_help = ('Name of the file to write the signature to. Written '
@@ -249,7 +249,7 @@ class SignOperation(CryptoOperation):
             raise SystemExit('Invalid hash method, choose one of %s' %
                              ', '.join(HASH_METHODS))
 
-        return rsa.sign(indata, priv_key, hash_method)
+        return adafruit_rsa.rsa.sign(indata, priv_key, hash_method)
 
 
 class VerifyOperation(CryptoOperation):
@@ -262,7 +262,7 @@ class VerifyOperation(CryptoOperation):
     operation = 'verify'
     operation_past = 'verified'
     operation_progressive = 'Verifying'
-    key_class = rsa.PublicKey
+    key_class = adafruit_rsa.rsa.PublicKey
     expected_cli_args = 2
     has_output = False
 
@@ -275,8 +275,8 @@ class VerifyOperation(CryptoOperation):
             signature = sigfile.read()
 
         try:
-            rsa.verify(indata, signature, pub_key)
-        except rsa.VerificationError:
+            adafruit_rsa.rsa.verify(indata, signature, pub_key)
+        except adafruit_rsa.rsa.VerificationError:
             raise SystemExit('Verification failed.')
 
         print('Verification OK', file=sys.stderr)

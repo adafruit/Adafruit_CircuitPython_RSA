@@ -28,17 +28,17 @@ from __future__ import print_function
 
 import multiprocessing as mp
 
-from rsa._compat import range
-import rsa.prime
-import rsa.randnum
+from adafruit_rsa.rsa._compat import range
+import adafruit_rsa.rsa.prime
+import adafruit_rsa.rsa.randnum
 
 
 def _find_prime(nbits, pipe):
     while True:
-        integer = rsa.randnum.read_random_odd_int(nbits)
+        integer = adafruit_rsa.rsa.randnum.read_random_odd_int(nbits)
 
         # Test for primeness
-        if rsa.prime.is_prime(integer):
+        if adafruit_rsa.rsa.prime.is_prime(integer):
             pipe.send(integer)
             return
 
@@ -49,14 +49,14 @@ def getprime(nbits, poolsize):
     Works in multiple threads at the same time.
 
     >>> p = getprime(128, 3)
-    >>> rsa.prime.is_prime(p-1)
+    >>> adafruit_rsa.rsa.prime.is_prime(p-1)
     False
-    >>> rsa.prime.is_prime(p)
+    >>> adafruit_rsa.rsa.prime.is_prime(p)
     True
-    >>> rsa.prime.is_prime(p+1)
+    >>> adafruit_rsa.rsa.prime.is_prime(p+1)
     False
 
-    >>> from rsa import common
+    >>> from adafruit_rsa.rsa import common
     >>> common.bit_size(p) == 128
     True
 

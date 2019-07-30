@@ -19,7 +19,7 @@
 # import base64
 import binascii
 
-from rsa._compat import is_bytes, range
+from adafruit_rsa.rsa._compat import is_bytes, range
 
 
 def _markers(pem_marker):

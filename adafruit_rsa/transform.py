@@ -24,8 +24,8 @@ From bytes to a number, number to bytes, etc.
 import binascii
 from struct import pack
 
-from rsa._compat import byte, is_integer
-from rsa import common, machine_size
+from adafruit_rsa.rsa._compat import byte, is_integer
+from adafruit_rsa.rsa import common, machine_size
 
 
 def bytes2int(raw_bytes):
