@@ -34,7 +34,7 @@ of pyasn1.
 """
 
 import adafruit_logging as logging
-import adafruit_rsa.warnings
+import adafruit_rsa.tools.warnings
 
 from adafruit_rsa.rsa._compat import range
 import adafruit_rsa.rsa.prime
