@@ -21,7 +21,10 @@ From bytes to a number, number to bytes, etc.
 
 # from __future__ import absolute_import
 
-from adafruit_rsa.tools import binascii
+try:
+    import binascii
+except ImportError:
+    from adafruit_rsa.tools import binascii
 from struct import pack
 
 from adafruit_rsa._compat import byte, is_integer
@@ -29,7 +32,7 @@ from adafruit_rsa import common, machine_size
 
 
 def bytes2int(raw_bytes):
-    r"""Converts a list of bytes or an 8-bit string to an integer.
+    """Converts a list of bytes or an 8-bit string to an integer.
 
     When using unicode strings, encode it to some encoding like UTF8 first.
 
@@ -44,7 +47,7 @@ def bytes2int(raw_bytes):
 
 
 def _int2bytes(number, block_size=None):
-    r"""Converts a number to a string of bytes.
+    """Converts a number to a string of bytes.
 
     Usage::
 
@@ -186,8 +189,10 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
         num >>= word_bits
+    print('Raw bytes: ', raw_bytes)
     # Obtain the index of the first non-zero byte.
     zero_leading = bytes_leading(raw_bytes)
+    print('Zero Leading: ', zero_leading)
     if number == 0:
         raw_bytes = b'\x00'
     # De-padding.
@@ -200,6 +205,7 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
                     "Need %d bytes for number, but fill size is %d" %
                     (length, fill_size)
             )
+        print('raw_bytes: ', raw_bytes, fill_size)
         #raw_bytes = raw_bytes.rjust(fill_size, b'\x00')
         raw_bytes = "% {}s".format(fill_size).encode() % raw_bytes
     elif chunk_size and chunk_size > 0:
@@ -210,9 +216,3 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
             # raw_bytes = raw_bytes.rjust(length + padding_size, b'\x00')
             raw_bytes = "% {}s".format(length + padding_size).encode() % raw_bytes
     return raw_bytes
-
-
-if __name__ == '__main__':
-    import doctest
-
-    doctest.testmod()

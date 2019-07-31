@@ -385,7 +385,8 @@ class PrivateKey(AbstractKey):
         return getattr(self, key)
 
     def __repr__(self):
-        return 'PrivateKey(%(n)i, %(e)i, %(d)i, %(p)i, %(q)i)' % self
+        return 'PrivateKey(%i, %i, %i, %i, %i)' % (self.n, self.e, self.d,
+                                                    self.p, self.q)
 
     def __getstate__(self):
         """Returns the key as tuple for pickling."""
@@ -430,7 +431,11 @@ class PrivateKey(AbstractKey):
         blind_r = adafruit_rsa.randnum.randint(self.n - 1)
         blinded = self.blind(encrypted, blind_r)  # blind before decrypting
         decrypted = adafruit_rsa.core.decrypt_int(blinded, self.d, self.n)
+        dec = adafruit_rsa.core.decrypt_int(encrypted, self.d, self.n)
+        print('dec unblind1: ', self.unblind(decrypted, blind_r))
 
+        ub = self.unblind(decrypted, blind_r)
+        print('ub2bytes: ', adafruit_rsa.transform.int2bytes(ub, 16))
         return self.unblind(decrypted, blind_r)
 
     def blinded_encrypt(self, message):
@@ -731,8 +736,7 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT):
         asked for. However, this makes key generation much slower. When False,
         `n`` may have slightly less bits.
     :param poolsize: the number of processes to use to generate the prime
-        numbers. If set to a number > 1, a parallel algorithm will be used.
-        This requires Python 2.6 or newer.
+        numbers. 
     :param exponent: the exponent for the key; only change this if you know
         what you're doing, as the exponent influences how difficult your
         private key can be cracked. A very common choice for e is 65537.
@@ -751,14 +755,8 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT):
     if poolsize < 1:
         raise ValueError('Pool size (%i) should be >= 1' % poolsize)
 
-    # Determine which getprime function to use
-    if poolsize > 1:
-        from adafruit_rsa import parallel
-        import functools
 
-        getprime_func = functools.partial(parallel.getprime, poolsize=poolsize)
-    else:
-        getprime_func = adafruit_rsa.prime.getprime
+    getprime_func = adafruit_rsa.prime.getprime
 
     # Generate the key components
     (p, q, e, d) = gen_keys(nbits, getprime_func, accurate=accurate, exponent=exponent)
@@ -773,19 +771,3 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT):
 
 
 __all__ = ['PublicKey', 'PrivateKey', 'newkeys']
-
-if __name__ == '__main__':
-    import doctest
-
-    try:
-        for count in range(100):
-            (failures, tests) = doctest.testmod()
-            if failures:
-                break
-
-            if (count % 10 == 0 and count) or count == 1:
-                print('%i times' % count)
-    except KeyboardInterrupt:
-        print('Aborted')
-    else:
-        print('Doctests done')

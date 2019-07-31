@@ -15,7 +15,10 @@
 #  limitations under the License.
 
 """Functions that load and write PEM-encoded files."""
-from adafruit_rsa.tools import binascii
+try:
+    import binascii
+except ImportError:
+    from adafruit_rsa.tools import binascii
 
 from adafruit_rsa._compat import is_bytes, range
 

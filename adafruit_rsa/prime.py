@@ -99,10 +99,8 @@ def miller_rabin_primality_testing(n, k):
         # Generate random integer a, where 2 <= a <= (n - 2)
         a = adafruit_rsa.randnum.randint(n - 3) + 1
 
-        #print('performing modular exponentiation...', i)
         # x = pow(a, d, n)
-        # x = a**d % n
-        x = pow_mod(a, d, n)
+        x = adafruit_rsa.core.fast_pow(a, d, n)
         #print('x: ', x)
         if x == 1 or x == n - 1:
             continue
@@ -110,7 +108,7 @@ def miller_rabin_primality_testing(n, k):
         for _ in range(r - 1):
             # x = pow(x, 2, n)
             # x = x**2 % n < TOO SLOW, memory error...
-            x = pow_mod(x, 2, n)
+            x = adafruit_rsa.core.fast_pow(x, 2, n)
             if x == 1:
                 # n is composite.
                 return False
@@ -198,18 +196,3 @@ def are_relatively_prime(a, b):
 
     d = gcd(a, b)
     return d == 1
-
-
-if __name__ == '__main__':
-    print('Running doctests 1000x or until failure')
-    import doctest
-
-    for count in range(1000):
-        (failures, tests) = doctest.testmod()
-        if failures:
-            break
-
-        if count % 100 == 0 and count:
-            print('%i times' % count)
-
-    print('Doctests done')

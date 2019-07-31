@@ -167,16 +167,19 @@ def encrypt(message, pub_key):
 
     keylength = common.byte_size(pub_key.n)
     padded = _pad_for_encryption(message, keylength)
-
+    print('Padded: ', padded)
     payload = transform.bytes2int(padded)
+    print('Payload:\n', payload)
     encrypted = core.encrypt_int(payload, pub_key.e, pub_key.n)
+    print('Encrypted: ', encrypted)
     block = transform.int2bytes(encrypted, keylength)
+    print('Block: ', block)
 
     return block
 
 
 def decrypt(crypto, priv_key):
-    r"""Decrypts the given message using PKCS#1 v1.5
+    """Decrypts the given message using PKCS#1 v1.5
 
     The decryption is considered 'failed' when the resulting cleartext doesn't
     start with the bytes 00 02, or when the 00 byte between the padding and
@@ -226,11 +229,18 @@ def decrypt(crypto, priv_key):
 
     """
 
+    # blocksize = common.byte_size(priv_key.n)
     blocksize = common.byte_size(priv_key.n)
+    print('block sz: ', blocksize)
+    print('Block: ', crypto)
     encrypted = transform.bytes2int(crypto)
+    print('Encrypted: ', encrypted)
     decrypted = priv_key.blinded_decrypt(encrypted)
+    print('Payload:\n', decrypted)
+    print('Payload Type: ', type(decrypted))
     cleartext = transform.int2bytes(decrypted, blocksize)
 
+    print('cleartext: ', cleartext)
     # If we can't find the cleartext marker, decryption failed.
     if cleartext[0:2] != b"\x00\x02":
         raise DecryptionError("Decryption failed")
@@ -390,6 +400,7 @@ def compute_hash(message, method_name):
         raise ValueError("Invalid or unsupported hash method: %s" % method_name)
 
     method = HASH_METHODS[method_name]
+    print("Method used: ", method)
     hasher = method()
 
     if hasattr(message, "read") and hasattr(message.read, "__call__"):
@@ -427,18 +438,3 @@ __all__ = [
     "VerificationError",
     "CryptoError",
 ]
-
-if __name__ == "__main__":
-    print("Running doctests 1000x or until failure")
-    import doctest
-
-    for count in range(1000):
-        (failures, tests) = doctest.testmod()
-        if failures:
-            break
-
-        if count % 100 == 0 and count:
-            print("%i times" % count)
-
-    print("Doctests done")
-

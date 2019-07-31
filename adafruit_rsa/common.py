@@ -188,9 +188,3 @@ def crt(a_values, modulo_values):
         x = (x + a_i * M_i * inv) % m
 
     return x
-
-
-if __name__ == '__main__':
-    import doctest
-
-    doctest.testmod()
