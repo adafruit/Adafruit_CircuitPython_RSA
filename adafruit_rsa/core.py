@@ -20,7 +20,7 @@ This is the actual core RSA implementation, which is only defined
 mathematically on integers.
 """
 
-from adafruit_rsa.rsa._compat import is_integer
+from adafruit_rsa._compat import is_integer
 
 def fast_pow(x,e,m):
     X = x

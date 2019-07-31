@@ -27,12 +27,11 @@ that are raised contain the Python traceback information, which can be used to
 deduce where in the process the failure occurred. DO NOT PASS SUCH INFORMATION
 to your users.
 """
-
-import hashlib
 import os
+import hashlib
 
-from adafruit_rsa.rsa._compat import range
-from adafruit_rsa.rsa import common, transform, core
+from adafruit_rsa._compat import range
+from adafruit_rsa import common, transform, core
 
 # ASN.1 codes that describe the hash algorithm used.
 HASH_ASN1 = {
@@ -45,10 +44,10 @@ HASH_ASN1 = {
 }
 
 HASH_METHODS = {
-    "MD5": hashlib.md5,
-    "SHA-1": hashlib.sha1,
+    #"MD5": hashlib.sha1,
+    #"SHA-1": hashlib.sha1,
     # 'SHA-224': hashlib.sha224,
-    "SHA-256": hashlib.sha256,
+    "SHA-256": hashlib._sha256,
     # 'SHA-384': hashlib.sha384,
     # 'SHA-512': hashlib.sha512,
 }
@@ -150,7 +149,7 @@ def encrypt(message, pub_key):
     :param message: the message to encrypt. Must be a byte string no longer than
         ``k-11`` bytes, where ``k`` is the number of bytes needed to encode
         the ``n`` component of the public key.
-    :param pub_key: the :py:class:`adafruit_rsa.rsa.PublicKey` to encrypt with.
+    :param pub_key: the :py:class:`adafruit_rsaPublicKey` to encrypt with.
     :raise OverflowError: when the message is too large to fit in the padded
         block.
 
@@ -183,15 +182,15 @@ def decrypt(crypto, priv_key):
     start with the bytes 00 02, or when the 00 byte between the padding and
     the message cannot be found.
 
-    :param crypto: the crypto text as returned by :py:func:`adafruit_rsa.rsa.encrypt`
-    :param priv_key: the :py:class:`adafruit_rsa.rsa.PrivateKey` to decrypt with.
+    :param crypto: the crypto text as returned by :py:func:`adafruit_rsaencrypt`
+    :param priv_key: the :py:class:`adafruit_rsaPrivateKey` to decrypt with.
     :raise DecryptionError: when the decryption fails. No details are given as
         to why the code thinks the decryption fails, as this would leak
         information about the private key.
 
 
     >>> import adafruit_rsa.rsa
-    >>> (pub_key, priv_key) = adafruit_rsa.rsa.newkeys(256)
+    >>> (pub_key, priv_key) = adafruit_rsanewkeys(256)
 
     It works with strings:
 
@@ -206,14 +205,14 @@ def decrypt(crypto, priv_key):
     b'\x00\x00\x00\x00\x01'
 
     Altering the encrypted information will *likely* cause a
-    :py:class:`adafruit_rsa.rsa.pkcs1.DecryptionError`. If you want to be *sure*, use
-    :py:func:`adafruit_rsa.rsa.sign`.
+    :py:class:`adafruit_rsapkcs1.DecryptionError`. If you want to be *sure*, use
+    :py:func:`adafruit_rsasign`.
 
 
     .. warning::
 
         Never display the stack trace of a
-        :py:class:`adafruit_rsa.rsa.pkcs1.DecryptionError` exception. It shows where in the
+        :py:class:`adafruit_rsapkcs1.DecryptionError` exception. It shows where in the
         code the exception occurred, and thus leaks information about the key.
         It's only a tiny bit of information, but every bit makes cracking the
         keys easier.
@@ -223,7 +222,7 @@ def decrypt(crypto, priv_key):
     >>> decrypt(crypto, priv_key)
     Traceback (most recent call last):
     ...
-    adafruit_rsa.rsa.pkcs1.DecryptionError: Decryption failed
+    adafruit_rsapkcs1.DecryptionError: Decryption failed
 
     """
 
@@ -253,7 +252,7 @@ def sign_hash(hash_value, priv_key, hash_method):
 
     :param hash_value: A precomputed hash to sign (ignores message). Should be set to
         None if needing to hash and sign message.
-    :param priv_key: the :py:class:`adafruit_rsa.rsa.PrivateKey` to sign with
+    :param priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign with
     :param hash_method: the hash method used on the message. Use 'MD5', 'SHA-1',
         'SHA-224', SHA-256', 'SHA-384' or 'SHA-512'.
     :return: a message signature block.
@@ -288,7 +287,7 @@ def sign(message, priv_key, hash_method):
     :param message: the message to sign. Can be an 8-bit string or a file-like
         object. If ``message`` has a ``read()`` method, it is assumed to be a
         file-like object.
-    :param priv_key: the :py:class:`adafruit_rsa.rsa.PrivateKey` to sign with
+    :param priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign with
     :param hash_method: the hash method used on the message. Use 'MD5', 'SHA-1',
         'SHA-224', SHA-256', 'SHA-384' or 'SHA-512'.
     :return: a message signature block.
@@ -310,7 +309,7 @@ def verify(message, signature, pub_key):
         object. If ``message`` has a ``read()`` method, it is assumed to be a
         file-like object.
     :param signature: the signature block, as created with :py:func:`rsa.sign`.
-    :param pub_key: the :py:class:`adafruit_rsa.rsa.PublicKey` of the person signing the message.
+    :param pub_key: the :py:class:`adafruit_rsaPublicKey` of the person signing the message.
     :raise VerificationError: when the signature doesn't match the message.
     :returns: the name of the used hash.
 
@@ -339,11 +338,11 @@ def verify(message, signature, pub_key):
 def find_signature_hash(signature, pub_key):
     """Returns the hash name detected from the signature.
 
-    If you also want to verify the message, use :py:func:`adafruit_rsa.rsa.verify()` instead.
+    If you also want to verify the message, use :py:func:`adafruit_rsaverify()` instead.
     It also returns the name of the used hash.
 
-    :param signature: the signature block, as created with :py:func:`adafruit_rsa.rsa.sign`.
-    :param pub_key: the :py:class:`adafruit_rsa.rsa.PublicKey` of the person signing the message.
+    :param signature: the signature block, as created with :py:func:`adafruit_rsasign`.
+    :param pub_key: the :py:class:`adafruit_rsaPublicKey` of the person signing the message.
     :returns: the name of the used hash.
     """
 

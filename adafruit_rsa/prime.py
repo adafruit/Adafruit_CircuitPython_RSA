@@ -20,9 +20,9 @@ Implementation based on the book Algorithm Design by Michael T. Goodrich and
 Roberto Tamassia, 2002.
 """
 
-from adafruit_rsa.rsa._compat import range
-import adafruit_rsa.rsa.common
-import adafruit_rsa.rsa.randnum
+from adafruit_rsa._compat import range
+import adafruit_rsa.common
+import adafruit_rsa.randnum
 
 __all__ = ['getprime', 'are_relatively_prime']
 
@@ -53,7 +53,7 @@ def get_primality_testing_rounds(number):
     """
 
     # Calculate number bitsize.
-    bitsize = adafruit_rsa.rsa.common.bit_size(number)
+    bitsize = adafruit_rsa.common.bit_size(number)
     # Set number of rounds.
     if bitsize >= 1536:
         return 3
@@ -95,16 +95,22 @@ def miller_rabin_primality_testing(n, k):
         d >>= 1
 
     # Test k witnesses.
-    for _ in range(k):
+    for i in range(k):
         # Generate random integer a, where 2 <= a <= (n - 2)
-        a = adafruit_rsa.rsa.randnum.randint(n - 3) + 1
+        a = adafruit_rsa.randnum.randint(n - 3) + 1
 
-        x = pow(a, d, n)
+        #print('performing modular exponentiation...', i)
+        # x = pow(a, d, n)
+        # x = a**d % n
+        x = pow_mod(a, d, n)
+        #print('x: ', x)
         if x == 1 or x == n - 1:
             continue
 
         for _ in range(r - 1):
-            x = pow(x, 2, n)
+            # x = pow(x, 2, n)
+            # x = x**2 % n < TOO SLOW, memory error...
+            x = pow_mod(x, 2, n)
             if x == 1:
                 # n is composite.
                 return False
@@ -114,9 +120,17 @@ def miller_rabin_primality_testing(n, k):
         else:
             # If loop doesn't break, n is composite.
             return False
-
     return True
 
+def pow_mod(x, y, z):
+    "Calculate (x ** y) % z efficiently."
+    number = 1
+    while y:
+        if y & 1:
+            number = number * x % z
+        y >>= 1
+        x = x * x % z
+    return number
 
 def is_prime(number):
     """Returns True if the number is prime, and False otherwise.
@@ -163,7 +177,7 @@ def getprime(nbits):
     assert nbits > 3  # the loop wil hang on too small numbers
 
     while True:
-        integer = adafruit_rsa.rsa.randnum.read_random_odd_int(nbits)
+        integer = adafruit_rsa.randnum.read_random_odd_int(nbits)
 
         # Test for primeness
         if is_prime(integer):

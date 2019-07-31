@@ -24,21 +24,21 @@ Introduced in Python-RSA 3.1.
 
 """
 
-from __future__ import print_function
+# from __future__ import print_function
 
 import multiprocessing as mp
 
-from adafruit_rsa.rsa._compat import range
-import adafruit_rsa.rsa.prime
-import adafruit_rsa.rsa.randnum
+from adafruit_rsa._compat import range
+import adafruit_rsa.prime
+import adafruit_rsa.randnum
 
 
 def _find_prime(nbits, pipe):
     while True:
-        integer = adafruit_rsa.rsa.randnum.read_random_odd_int(nbits)
+        integer = adafruit_rsa.randnum.read_random_odd_int(nbits)
 
         # Test for primeness
-        if adafruit_rsa.rsa.prime.is_prime(integer):
+        if adafruit_rsa.prime.is_prime(integer):
             pipe.send(integer)
             return
 
@@ -49,11 +49,11 @@ def getprime(nbits, poolsize):
     Works in multiple threads at the same time.
 
     >>> p = getprime(128, 3)
-    >>> adafruit_rsa.rsa.prime.is_prime(p-1)
+    >>> adafruit_rsa.prime.is_prime(p-1)
     False
-    >>> adafruit_rsa.rsa.prime.is_prime(p)
+    >>> adafruit_rsa.prime.is_prime(p)
     True
-    >>> adafruit_rsa.rsa.prime.is_prime(p+1)
+    >>> adafruit_rsa.prime.is_prime(p+1)
     False
 
     >>> from adafruit_rsa.rsa import common

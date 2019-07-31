@@ -14,7 +14,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from adafruit_rsa.rsa._compat import zip
+from adafruit_rsa._compat import zip
 
 """Common functionality shared by several modules."""
 

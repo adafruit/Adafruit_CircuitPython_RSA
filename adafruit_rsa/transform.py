@@ -21,11 +21,11 @@ From bytes to a number, number to bytes, etc.
 
 # from __future__ import absolute_import
 
-import binascii
+from adafruit_rsa.tools import binascii
 from struct import pack
 
-from adafruit_rsa.rsa._compat import byte, is_integer
-from adafruit_rsa.rsa import common, machine_size
+from adafruit_rsa._compat import byte, is_integer
+from adafruit_rsa import common, machine_size
 
 
 def bytes2int(raw_bytes):

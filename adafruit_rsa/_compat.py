@@ -16,9 +16,9 @@
 
 """Python compatibility wrappers."""
 
-# from __future__ import absolute_import
+"from __future__ import absolute_import"
 
-import adafruit_itertools.adafruit_itertools as itertools
+import adafruit_itertools
 import sys
 from struct import pack
 

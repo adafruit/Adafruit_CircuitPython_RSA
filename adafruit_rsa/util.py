@@ -16,12 +16,12 @@
 
 """Utility functions."""
 
-from __future__ import with_statement, print_function
+# from __future__ import with_statement, print_function
 
 import sys
 from optparse import OptionParser
 
-import adafruit_rsa.rsa.key
+import adafruit_rsa.key
 
 
 def private_to_public():
@@ -62,8 +62,8 @@ def private_to_public():
     assert type(in_data) == bytes, type(in_data)
 
     # Take the public fields and create a public key
-    priv_key = adafruit_rsa.rsa.key.PrivateKey.load_pkcs1(in_data, cli.inform)
-    pub_key = adafruit_rsa.rsa.key.PublicKey(priv_key.n, priv_key.e)
+    priv_key = adafruit_rsa.key.PrivateKey.load_pkcs1(in_data, cli.inform)
+    pub_key = adafruit_rsa.key.PublicKey(priv_key.n, priv_key.e)
 
     # Save to the output file
     out_data = pub_key.save_pkcs1(cli.outform)

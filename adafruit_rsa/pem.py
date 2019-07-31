@@ -15,11 +15,9 @@
 #  limitations under the License.
 
 """Functions that load and write PEM-encoded files."""
+from adafruit_rsa.tools import binascii
 
-# import base64
-import binascii
-
-from adafruit_rsa.rsa._compat import is_bytes, range
+from adafruit_rsa._compat import is_bytes, range
 
 
 def _markers(pem_marker):

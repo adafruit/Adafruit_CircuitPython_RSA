@@ -20,8 +20,8 @@ This module implements certain functionality from PKCS#1 version 2. Main
 documentation is RFC 2437: https://tools.ietf.org/html/rfc2437
 """
 
-from adafruit_rsa.rsa._compat import range
-from adafruit_rsa.rsa import (
+from adafruit_rsa._compat import range
+from adafruit_rsa import (
     common,
     pkcs1,
     transform,
