@@ -28,7 +28,7 @@ except ImportError:
     hashlib = None
 
 def init():
-    for i in ("sha224", "sha256", "sha384", "sha512"):
+    for i in ("sha1", "sha224", "sha256", "sha384", "sha512", "md5"):
         c = getattr(hashlib, i, None)
         if not c:
             c = __import__("_" + i, None, None, (), 1)

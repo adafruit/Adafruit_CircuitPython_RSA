@@ -211,6 +211,8 @@ def sha_final(sha_info):
     return bytes(dig)
 
 class sha256(object):
+    """Creates a SHA256 hasher object and optionally feeds data into it. 
+    """
     digest_size = digestsize = SHA_DIGESTSIZE
     block_size = SHA_BLOCKSIZE
 
@@ -234,6 +236,8 @@ class sha256(object):
         return new
 
 class sha224(sha256):
+    """Creates a SHA224 hasher object and optionally feeds data into it. 
+    """
     digest_size = digestsize = 28
 
     def __init__(self, s=None):
@@ -245,3 +249,15 @@ class sha224(sha256):
         new = sha224()
         new._sha = self._sha.copy()
         return new
+
+class sha1(sha256):
+    """Creates a SHA1 hasher object and optionally feeds data into it. 
+    """
+    def __init__(self, s=None):
+        raise NotImplementedError('SHA1 is not implemented in the mock-hashlib module.')
+
+class md5(sha256):
+    """Creates a MD5 hasher object and optionally feeds data into it. 
+    """
+    def __init__(self, s=None):
+        raise NotImplementedError('MD5 is not implemented in the mock-hashlib module.')

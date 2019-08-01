@@ -240,6 +240,8 @@ def sha_final(sha_info):
     return bytes(dig)
 
 class sha512(object):
+    """Creates a SHA512 hasher object and optionally feeds data into it. 
+    """
     digest_size = digestsize = SHA_DIGESTSIZE
     block_size = SHA_BLOCKSIZE
 
@@ -263,6 +265,8 @@ class sha512(object):
         return new
 
 class sha384(sha512):
+    """Creates a SHA384 hasher object and optionally feeds data into it. 
+    """
     digest_size = digestsize = 48
 
     def __init__(self, s=None):
