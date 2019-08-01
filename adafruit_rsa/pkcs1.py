@@ -50,7 +50,7 @@ HASH_METHODS = {
     "MD5": hashlib.md5,
     "SHA-1": hashlib.sha1,
     "SHA-224": hashlib.sha224,
-    "SHA-256": hashlib._sha256,
+    "SHA-256": hashlib.sha256,
     "SHA-384": hashlib.sha384,
     "SHA-512": hashlib.sha512,
 }
@@ -392,7 +392,6 @@ def compute_hash(message, method_name):
         raise ValueError("Invalid or unsupported hash method: %s" % method_name)
 
     method = HASH_METHODS[method_name]
-    print("Method used: ", method)
     hasher = method()
 
     if hasattr(message, "read") and hasattr(message.read, "__call__"):

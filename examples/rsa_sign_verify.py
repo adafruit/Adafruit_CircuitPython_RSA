@@ -1,13 +1,20 @@
 import adafruit_rsa
 
-# Generate a new keypair
-(public_key, private_key) = adafruit_rsa.newkeys(512)
+# Generate a keypair
+#
+# Supported Hash method   Suggested minimum key size (bits)
+# SHA-256                 496
+# SHA-384                 624
+# SHA-512                 752
+#
+(public_key, private_key) = adafruit_rsa.newkeys(496)
 
-# Create a new message
-message = 'Go left at the blue tree'
+# Create a new secret message
+message = 'Meet me at 6pm'
 
 # Hash the message using SHA-224
-hash_method = "SHA-224"
+hash_method = "SHA-256"
 signature = adafruit_rsa.sign(message, private_key, hash_method)
 
-print("Message ", adafruit_rsa.verify(message, signature, public_key))
+# Verify Message Signature
+assert adafruit_rsa.verify(message, signature, public_key) == hash_method, "Verification failed, signature does not match message."
