@@ -13,7 +13,8 @@ Introduction
     :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_RSA
     :alt: Build Status
 
-RSA implementation based on python-rsa
+RSA implementation based on `Sybren A. Stüvel's python-rsa <https://github.com/sybrenstuvel/python-rsa>`_ pure-python
+RSA implementation.
 
 
 Dependencies
@@ -30,9 +31,6 @@ Installing from PyPI
 =====================
 .. note:: This library is not available on PyPI yet. Install documentation is included
    as a standard element. Stay tuned for PyPI availability!
-
-.. todo:: Remove the above note if PyPI version is/will be available at time of release.
-   If the library is not planned for PyPI, remove the entire 'Installing from PyPI' section.
 
 On supported GNU/Linux systems like the Raspberry Pi, you can install the driver locally `from
 PyPI <https://pypi.org/project/adafruit-circuitpython-rsa/>`_. To install for current user:
@@ -59,7 +57,7 @@ To install in a virtual environment in your current project:
 Usage Example
 =============
 
-.. todo:: Add a quick, simple example. It and other examples should live in the examples folder and be included in docs/examples.rst.
+Examples for this library are avaliable in the examples/ folder.
 
 Contributing
 ============
