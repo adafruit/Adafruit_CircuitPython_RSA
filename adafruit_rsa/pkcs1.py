@@ -37,7 +37,7 @@ from adafruit_rsa import common, transform, core
 HASH_ASN1 = {
     "MD5": b"\x30\x20\x30\x0c\x06\x08\x2a\x86\x48\x86\xf7\x0d\x02\x05\x05\x00\x04\x10",
     "SHA-1": b"\x30\x21\x30\x09\x06\x05\x2b\x0e\x03\x02\x1a\x05\x00\x04\x14",
-    # 'SHA-224': b'\x30\x2d\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x04\x05\x00\x04\x1c',
+    'SHA-224': b'\x30\x2d\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x04\x05\x00\x04\x1c',
     "SHA-256": b"\x30\x31\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x01\x05\x00\x04\x20",
     # 'SHA-384': b'\x30\x41\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x02\x05\x00\x04\x30',
     # 'SHA-512': b'\x30\x51\x30\x0d\x06\x09\x60\x86\x48\x01\x65\x03\x04\x02\x03\x05\x00\x04\x40',
@@ -46,10 +46,10 @@ HASH_ASN1 = {
 HASH_METHODS = {
     #"MD5": hashlib.sha1,
     #"SHA-1": hashlib.sha1,
-    # 'SHA-224': hashlib.sha224,
+    "SHA-224": hashlib.sha224,
     "SHA-256": hashlib._sha256,
-    # 'SHA-384': hashlib.sha384,
-    # 'SHA-512': hashlib.sha512,
+    "SHA-384": hashlib.sha384,
+    "SHA-512": hashlib.sha512,
 }
 
 
@@ -226,7 +226,6 @@ def decrypt(crypto, priv_key):
     """
 
     blocksize = common.byte_size(priv_key.n)
-    print(blocksize)
     encrypted = transform.bytes2int(crypto)
     decrypted = priv_key.blinded_decrypt(encrypted)
     cleartext = transform.int2bytes(decrypted, blocksize)
