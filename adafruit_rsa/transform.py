@@ -189,10 +189,8 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
         num >>= word_bits
-    print('Raw bytes: ', raw_bytes)
     # Obtain the index of the first non-zero byte.
     zero_leading = bytes_leading(raw_bytes)
-    print('Zero Leading: ', zero_leading)
     if number == 0:
         raw_bytes = b'\x00'
     # De-padding.
@@ -205,14 +203,10 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
                     "Need %d bytes for number, but fill size is %d" %
                     (length, fill_size)
             )
-        print('raw_bytes: ', raw_bytes, fill_size)
-        #raw_bytes = raw_bytes.rjust(fill_size, b'\x00')
-        raw_bytes = "% {}s".format(fill_size).encode() % raw_bytes
+        raw_bytes = b'\x00' + raw_bytes
     elif chunk_size and chunk_size > 0:
         remainder = length % chunk_size
         if remainder:
             padding_size = chunk_size - remainder
-            # CPython Impl.
-            # raw_bytes = raw_bytes.rjust(length + padding_size, b'\x00')
-            raw_bytes = "% {}s".format(length + padding_size).encode() % raw_bytes
+            raw_bytes = b'\x00' + raw_bytes
     return raw_bytes

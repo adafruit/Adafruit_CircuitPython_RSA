@@ -167,13 +167,9 @@ def encrypt(message, pub_key):
 
     keylength = common.byte_size(pub_key.n)
     padded = _pad_for_encryption(message, keylength)
-    print('Padded: ', padded)
     payload = transform.bytes2int(padded)
-    print('Payload:\n', payload)
     encrypted = core.encrypt_int(payload, pub_key.e, pub_key.n)
-    print('Encrypted: ', encrypted)
     block = transform.int2bytes(encrypted, keylength)
-    print('Block: ', block)
 
     return block
 
@@ -229,18 +225,12 @@ def decrypt(crypto, priv_key):
 
     """
 
-    # blocksize = common.byte_size(priv_key.n)
     blocksize = common.byte_size(priv_key.n)
-    print('block sz: ', blocksize)
-    print('Block: ', crypto)
+    print(blocksize)
     encrypted = transform.bytes2int(crypto)
-    print('Encrypted: ', encrypted)
     decrypted = priv_key.blinded_decrypt(encrypted)
-    print('Payload:\n', decrypted)
-    print('Payload Type: ', type(decrypted))
     cleartext = transform.int2bytes(decrypted, blocksize)
 
-    print('cleartext: ', cleartext)
     # If we can't find the cleartext marker, decryption failed.
     if cleartext[0:2] != b"\x00\x02":
         raise DecryptionError("Decryption failed")

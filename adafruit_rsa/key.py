@@ -432,10 +432,9 @@ class PrivateKey(AbstractKey):
         blinded = self.blind(encrypted, blind_r)  # blind before decrypting
         decrypted = adafruit_rsa.core.decrypt_int(blinded, self.d, self.n)
         dec = adafruit_rsa.core.decrypt_int(encrypted, self.d, self.n)
-        print('dec unblind1: ', self.unblind(decrypted, blind_r))
 
         ub = self.unblind(decrypted, blind_r)
-        print('ub2bytes: ', adafruit_rsa.transform.int2bytes(ub, 16))
+        #print('ub2bytes: ', adafruit_rsa.transform.int2bytes(ub, 16))
         return self.unblind(decrypted, blind_r)
 
     def blinded_encrypt(self, message):
