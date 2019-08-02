@@ -110,14 +110,15 @@ class AbstractKey(object):
         :return: the loaded key
         :rtype: AbstractKey
         """
+        raise NotImplementedError("Loading PEM Files not supported by this CircuitPython library.")
 
-        methods = {
-            'PEM': cls._load_pkcs1_pem,
-            'DER': cls._load_pkcs1_der,
-        }
+        # methods = {
+        #    'PEM': cls._load_pkcs1_pem,
+        #    'DER': cls._load_pkcs1_der,
+        #}
 
-        method = cls._assert_format_exists(format, methods)
-        return method(keyfile)
+        #method = cls._assert_format_exists(format, methods)
+        #return method(keyfile)
 
     @staticmethod
     def _assert_format_exists(file_format, methods):
@@ -256,7 +257,7 @@ class PublicKey(AbstractKey):
 
         """
 
-        from pyasn1.codec.der import decoder
+        from adafruit_rsa.tools.pyasn1.codec.der import decoder
         from adafruit_rsa.asn1 import AsnPubKey
 
         (priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
@@ -436,7 +437,6 @@ class PrivateKey(AbstractKey):
         dec = adafruit_rsa.core.decrypt_int(encrypted, self.d, self.n)
 
         ub = self.unblind(decrypted, blind_r)
-        #print('ub2bytes: ', adafruit_rsa.transform.int2bytes(ub, 16))
         return self.unblind(decrypted, blind_r)
 
     def blinded_encrypt(self, message):
@@ -476,7 +476,7 @@ class PrivateKey(AbstractKey):
 
         """
 
-        from pyasn1.codec.der import decoder
+        from adafruit_rsa.tools.pyasn1.codec.der import decoder
         (priv, _) = decoder.decode(keyfile)
 
         # ASN.1 contents of DER encoded private key:
