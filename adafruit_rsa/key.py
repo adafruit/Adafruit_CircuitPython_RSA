@@ -45,6 +45,8 @@ import adafruit_rsa.core
 
 
 log = logging.getLogger(__name__)
+log.setLevel(logging.INFO)
+
 DEFAULT_EXPONENT = 65537
 
 
@@ -723,7 +725,7 @@ def gen_keys(nbits, getprime_func, accurate=True, exponent=DEFAULT_EXPONENT):
     return p, q, e, d
 
 
-def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT):
+def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_level="INFO"):
     """Generates public and private keys, and returns them as (pub, priv).
 
     The public key is also known as the 'encryption key', and is a
@@ -740,6 +742,8 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT):
         what you're doing, as the exponent influences how difficult your
         private key can be cracked. A very common choice for e is 65537.
     :type exponent: int
+    :param log_level: Logger level, setting to DEBUG will log info about when
+                        p and q are generating.
 
     :returns: a tuple (:py:class:`adafruit_rsa.rsa.PublicKey`, :py:class:`adafruit_rsa.rsa.PrivateKey`)
 
@@ -754,6 +758,8 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT):
     if poolsize < 1:
         raise ValueError('Pool size (%i) should be >= 1' % poolsize)
 
+    if log_level == "DEBUG":
+        log.setLevel(logging.DEBUG)
 
     getprime_func = adafruit_rsa.prime.getprime
 
