@@ -19,7 +19,7 @@
 Not all ASN.1-handling code use these definitions, but when it does, they should be here.
 """
 
-from pyasn1.type import univ, namedtype, tag
+from adafruit_rsa.pyasn1.type import univ, namedtype, tag
 
 
 class PubKeyHeader(univ.Sequence):
