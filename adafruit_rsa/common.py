@@ -13,21 +13,22 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
+"""Common functionality shared by several modules."""
+# pylint: disable=redefined-builtin
 from adafruit_rsa._compat import zip
 
-"""Common functionality shared by several modules."""
-
 def bit_length(int_type):
-    " Return the number of bits necessary to represent an integer in binary, excluding the sign and leading zeros "
+    """Return the number of bits necessary to represent an integer in binary,
+    excluding the sign and leading zeros"""
     length = 0
-    while (int_type):
+    while int_type:
         int_type >>= 1
         length += 1
-    return(length)
+    return length
 
-
+# pylint: disable=invalid-name
 class NotRelativePrimeError(ValueError):
+    """Returns an error if values are not relatively prime."""
     def __init__(self, a, b, d, msg=None):
         super(NotRelativePrimeError, self).__init__(
             msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d))
@@ -112,7 +113,7 @@ def ceil_div(num, div):
         quanta += 1
     return quanta
 
-
+# pylint: disable=invalid-name
 def extended_gcd(a, b):
     """Returns a tuple (r, i, j) such that r = gcd(a, b) = ia + jb
     """

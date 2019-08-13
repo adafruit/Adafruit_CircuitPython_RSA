@@ -34,23 +34,23 @@ of pyasn1.
 """
 
 import adafruit_logging as logging
-import adafruit_rsa.tools.warnings
+# import adafruit_rsa.tools.warnings as warnings
 
-from adafruit_rsa._compat import range
+# pylint: disable=redefined-builtin
 import adafruit_rsa.prime
 import adafruit_rsa.pem
 import adafruit_rsa.common
 import adafruit_rsa.randnum
 import adafruit_rsa.core
 
-
+# pylint: disable=invalid-name
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
 DEFAULT_EXPONENT = 65537
 
-
-class AbstractKey(object):
+#br: removed signature AbstractKey(object) to satisfy pylint
+class AbstractKey():
     """Abstract superclass for private and public keys."""
 
     __slots__ = ('n', 'e')
@@ -110,15 +110,7 @@ class AbstractKey(object):
         :return: the loaded key
         :rtype: AbstractKey
         """
-        raise NotImplementedError("Loading PEM Files not supported by this CircuitPython library.")
-
-        # methods = {
-        #    'PEM': cls._load_pkcs1_pem,
-        #    'DER': cls._load_pkcs1_der,
-        #}
-
-        #method = cls._assert_format_exists(format, methods)
-        #return method(keyfile)
+        raise NotImplementedError("Loading PEM Files is not currently supported in this library.")
 
     @staticmethod
     def _assert_format_exists(file_format, methods):
@@ -140,14 +132,8 @@ class AbstractKey(object):
         :returns: the DER- or PEM-encoded key.
         :rtype: bytes
         """
+        raise NotImplementedError("Saving PEM Files is not currently supported in this library.")
 
-        methods = {
-            'PEM': self._save_pkcs1_pem,
-            'DER': self._save_pkcs1_der,
-        }
-
-        method = self._assert_format_exists(format, methods)
-        return method()
 
     def blind(self, message, r):
         """Performs blinding on the message using random number 'r'.
@@ -180,7 +166,7 @@ class AbstractKey(object):
 
         return (adafruit_rsa.common.inverse(r, self.n) * blinded) % self.n
 
-
+# pylint: disable=abstract-method
 class PublicKey(AbstractKey):
     """Represents a public RSA key.
 
@@ -231,7 +217,7 @@ class PublicKey(AbstractKey):
         return self.n == other.n and self.e == other.e
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def __hash__(self):
         return hash((self.n, self.e))
@@ -257,11 +243,11 @@ class PublicKey(AbstractKey):
 
         """
 
-        from adafruit_rsa.tools.pyasn1.codec.der import decoder
-        from adafruit_rsa.asn1 import AsnPubKey
+        #from pyasn1.codec.der import decoder
+        #from pyasn1 import AsnPubKey
 
-        (priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
-        return cls(n=int(priv['modulus']), e=int(priv['publicExponent']))
+        #(priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
+        #return cls(n=int(priv['modulus']), e=int(priv['publicExponent']))
 
     def _save_pkcs1_der(self):
         """Saves the public key in PKCS#1 DER format.
@@ -270,15 +256,15 @@ class PublicKey(AbstractKey):
         :rtype: bytes
         """
 
-        from pyasn1.codec.der import encoder
-        from rsa.asn1 import AsnPubKey
+        # from pyasn1.codec.der import encoder
+        # from rsa.asn1 import AsnPubKey
 
         # Create the ASN object
-        asn_key = AsnPubKey()
-        asn_key.setComponentByName('modulus', self.n)
-        asn_key.setComponentByName('publicExponent', self.e)
+        # asn_key = AsnPubKey()
+        # asn_key.setComponentByName('modulus', self.n)
+        # asn_key.setComponentByName('publicExponent', self.e)
 
-        return encoder.encode(asn_key)
+        # return encoder.encode(asn_key)
 
     @classmethod
     def _load_pkcs1_pem(cls, keyfile):
@@ -302,6 +288,7 @@ class PublicKey(AbstractKey):
         :rtype: bytes
         """
 
+        # pylint: disable=assignment-from-no-return
         der = self._save_pkcs1_der()
         return adafruit_rsa.pem.save_pem(der, 'RSA PUBLIC KEY')
 
@@ -346,7 +333,7 @@ class PublicKey(AbstractKey):
 
         return cls._load_pkcs1_der(keyinfo['key'][1:])
 
-
+# pylint: disable=abstract-method
 class PrivateKey(AbstractKey):
     """Represents a private RSA key.
 
@@ -372,7 +359,7 @@ class PrivateKey(AbstractKey):
     """
 
     __slots__ = ('n', 'e', 'd', 'p', 'q', 'exp1', 'exp2', 'coef')
-
+    # pylint: disable=too-many-arguments
     def __init__(self, n, e, d, p, q):
         AbstractKey.__init__(self, n, e)
         self.d = d
@@ -389,7 +376,7 @@ class PrivateKey(AbstractKey):
 
     def __repr__(self):
         return 'PrivateKey(%i, %i, %i, %i, %i)' % (self.n, self.e, self.d,
-                                                    self.p, self.q)
+                                                   self.p, self.q)
 
     def __getstate__(self):
         """Returns the key as tuple for pickling."""
@@ -416,7 +403,7 @@ class PrivateKey(AbstractKey):
                 self.coef == other.coef)
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def __hash__(self):
         return hash((self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef))
@@ -434,9 +421,7 @@ class PrivateKey(AbstractKey):
         blind_r = adafruit_rsa.randnum.randint(self.n - 1)
         blinded = self.blind(encrypted, blind_r)  # blind before decrypting
         decrypted = adafruit_rsa.core.decrypt_int(blinded, self.d, self.n)
-        dec = adafruit_rsa.core.decrypt_int(encrypted, self.d, self.n)
 
-        ub = self.unblind(decrypted, blind_r)
         return self.unblind(decrypted, blind_r)
 
     def blinded_encrypt(self, message):
@@ -476,8 +461,8 @@ class PrivateKey(AbstractKey):
 
         """
 
-        from adafruit_rsa.tools.pyasn1.codec.der import decoder
-        (priv, _) = decoder.decode(keyfile)
+        # from pyasn1.codec.der import decoder
+        # (priv, _) = decoder.decode(keyfile)
 
         # ASN.1 contents of DER encoded private key:
         #
@@ -494,23 +479,23 @@ class PrivateKey(AbstractKey):
         #     otherPrimeInfos   OtherPrimeInfos OPTIONAL
         # }
 
-        if priv[0] != 0:
-            raise ValueError('Unable to read this file, version %s != 0' % priv[0])
+        # if priv[0] != 0:
+        #    raise ValueError('Unable to read this file, version %s != 0' % priv[0])
 
-        as_ints = map(int, priv[1:6])
-        key = cls(*as_ints)
+        # as_ints = map(int, priv[1:6])
+        # key = cls(*as_ints)
 
-        exp1, exp2, coef = map(int, priv[6:9])
+        # exp1, exp2, coef = map(int, priv[6:9])
 
-        if (key.exp1, key.exp2, key.coef) != (exp1, exp2, coef):
-            warnings.warn(
-                'You have provided a malformed keyfile. Either the exponents '
-                'or the coefficient are incorrect. Using the correct values '
-                'instead.',
-                UserWarning,
-            )
+        # if (key.exp1, key.exp2, key.coef) != (exp1, exp2, coef):
+        #    warnings.warn(
+        #        'You have provided a malformed keyfile. Either the exponents '
+        #        'or the coefficient are incorrect. Using the correct values '
+        #        'instead.',
+        #        UserWarning,
+        #    )
 
-        return key
+        #return key
 
     def _save_pkcs1_der(self):
         """Saves the private key in PKCS#1 DER format.
@@ -523,6 +508,8 @@ class PrivateKey(AbstractKey):
         from pyasn1.codec.der import encoder
 
         class AsnPrivKey(univ.Sequence):
+            """ASN.1 Private Key Sequence.
+            """
             componentType = namedtype.NamedTypes(
                 namedtype.NamedType('version', univ.Integer()),
                 namedtype.NamedType('modulus', univ.Integer()),
@@ -675,7 +662,7 @@ def calculate_keys_custom_exponent(p, q, exponent):
         raise adafruit_rsa.common.NotRelativePrimeError(
             exponent, phi_n, ex.d,
             msg="e (%d) and phi_n (%d) are not relatively prime (divider=%i)" %
-                (exponent, phi_n, ex.d))
+            (exponent, phi_n, ex.d))
 
     if (exponent * d) % phi_n != 1:
         raise ValueError("e (%d) and d (%d) are not mult. inv. modulo "
@@ -737,7 +724,7 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_lev
         asked for. However, this makes key generation much slower. When False,
         `n`` may have slightly less bits.
     :param poolsize: the number of processes to use to generate the prime
-        numbers. 
+        numbers.
     :param exponent: the exponent for the key; only change this if you know
         what you're doing, as the exponent influences how difficult your
         private key can be cracked. A very common choice for e is 65537.
@@ -745,7 +732,8 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_lev
     :param log_level: Logger level, setting to DEBUG will log info about when
                         p and q are generating.
 
-    :returns: a tuple (:py:class:`adafruit_rsa.rsa.PublicKey`, :py:class:`adafruit_rsa.rsa.PrivateKey`)
+    :returns: a tuple (:py:class:`adafruit_rsa.rsa.PublicKey`,
+                :py:class:`adafruit_rsa.rsa.PrivateKey`)
 
     The ``poolsize`` parameter was added in *Python-RSA 3.1* and requires
     Python 2.6 or newer.
