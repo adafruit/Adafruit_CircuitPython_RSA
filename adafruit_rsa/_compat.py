@@ -37,9 +37,8 @@ else:
 
 # pylint: disable=invalid-name
 integer_types = (int, )
-# br: commented, do these redefs have effect?
-# range = range
-# zip = zip
+range = range
+zip = zip
 
 
 def write_to_stdout(data):

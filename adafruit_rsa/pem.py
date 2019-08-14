@@ -19,7 +19,7 @@ try:
     import binascii
 except ImportError:
     from adafruit_rsa.tools import binascii
-
+# pylint: disable=redefined-builtin
 from adafruit_rsa._compat import is_bytes, range
 
 
