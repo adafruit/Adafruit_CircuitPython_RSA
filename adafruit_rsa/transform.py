@@ -178,6 +178,7 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
         raise ValueError("You can either fill or pad chunks, but not both")
 
     # Ensure these are integers.
+    # pylint: disable=pointless-statement
     number & 1
 
     raw_bytes = b''
@@ -200,13 +201,13 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
     if fill_size and fill_size > 0:
         if not overflow and length > fill_size:
             raise OverflowError(
-                    "Need %d bytes for number, but fill size is %d" %
-                    (length, fill_size)
+                "Need %d bytes for number, but fill size is %d" %
+                (length, fill_size)
             )
         raw_bytes = b'\x00' + raw_bytes
     elif chunk_size and chunk_size > 0:
         remainder = length % chunk_size
         if remainder:
-            padding_size = chunk_size - remainder
+            # padding_size = chunk_size - remainder
             raw_bytes = b'\x00' + raw_bytes
     return raw_bytes
