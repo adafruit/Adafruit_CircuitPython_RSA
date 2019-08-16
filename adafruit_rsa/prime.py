@@ -19,14 +19,14 @@
 Implementation based on the book Algorithm Design by Michael T. Goodrich and
 Roberto Tamassia, 2002.
 """
-# pylint: disable=redefined-builtin
+
 from adafruit_rsa._compat import range
 import adafruit_rsa.common
 import adafruit_rsa.randnum
 
 __all__ = ['getprime', 'are_relatively_prime']
 
-# pylint: disable=invalid-name
+
 def gcd(p, q):
     """Returns the greatest common divisor of p and q
 
@@ -90,19 +90,19 @@ def miller_rabin_primality_testing(n, k):
     d = n - 1
     r = 0
 
-    while not d & 1:
+    while not (d & 1):
         r += 1
         d >>= 1
 
     # Test k witnesses.
-    for _ in range(k):
+    for i in range(k):
         # Generate random integer a, where 2 <= a <= (n - 2)
         a = adafruit_rsa.randnum.randint(n - 3) + 1
 
         # x = pow(a, d, n)
         x = adafruit_rsa.core.fast_pow(a, d, n)
         #print('x: ', x)
-        if x in (1, n-1) or x == 1:
+        if x == 1 or x == n - 1:
             continue
 
         for _ in range(r - 1):
@@ -146,7 +146,7 @@ def is_prime(number):
         return number in {2, 3, 5, 7}
 
     # Check for even numbers.
-    if not number & 1:
+    if not (number & 1):
         return False
 
     # Calculate minimum number of rounds.

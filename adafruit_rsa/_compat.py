@@ -16,6 +16,9 @@
 
 """Python compatibility wrappers."""
 
+"from __future__ import absolute_import"
+
+import adafruit_itertools
 import sys
 from struct import pack
 
@@ -23,6 +26,8 @@ MAX_INT = sys.maxsize
 MAX_INT64 = (1 << 63) - 1
 MAX_INT32 = (1 << 31) - 1
 MAX_INT16 = (1 << 15) - 1
+
+PY2 = sys.version_info[0] == 2
 
 # Determine the word size of the processor.
 if MAX_INT == MAX_INT64:
@@ -35,10 +40,14 @@ else:
     # Else we just assume 64-bit processor keeping up with modern times.
     MACHINE_WORD_SIZE = 64
 
-# pylint: disable=invalid-name
-integer_types = (int, )
-range = range
-zip = zip
+if PY2:
+    integer_types = (int, long)
+    range = xrange
+    zip = itertools.izip
+else:
+    integer_types = (int, )
+    range = range
+    zip = zip
 
 
 def write_to_stdout(data):
@@ -46,7 +55,11 @@ def write_to_stdout(data):
 
     :type data: bytes
     """
-    sys.stdout.buffer.write(data)
+    if PY2:
+        sys.stdout.write(data)
+    else:
+        # On Py3 we must use the buffer interface to write bytes.
+        sys.stdout.buffer.write(data)
 
 
 def is_bytes(obj):
@@ -88,7 +101,7 @@ def byte(num):
     """
     return pack("B", num)
 
-# pylint: disable=redefined-builtin
+
 def xor_bytes(b1, b2):
     """
     Returns the bitwise XOR result between two bytes objects, b1 ^ b2.
@@ -104,9 +117,12 @@ def xor_bytes(b1, b2):
     :returns:
         Bytes object, result of XOR operation.
     """
+    if PY2:
+        return ''.join(byte(ord(x) ^ ord(y)) for x, y in zip(b1, b2))
+
     return bytes(x ^ y for x, y in zip(b1, b2))
 
-# pylint: disable=no-else-return
+
 def get_word_alignment(num, force_arch=64,
                        _machine_word_size=MACHINE_WORD_SIZE):
     """
