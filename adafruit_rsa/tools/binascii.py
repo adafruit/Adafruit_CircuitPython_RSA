@@ -26,6 +26,7 @@ THE SOFTWARE.
 """
 if not "unhexlify" in globals():
     def unhexlify(data):
+        """Return the binary data represented by the hexadecimal string hexstr."""
         if len(data) % 2 != 0:
             raise ValueError("Odd-length string")
 
@@ -42,25 +43,26 @@ if not "hexlify" in globals():
 
         This method's signature is the same as CPython3 hexlify.
         """
-        if len(data) == 0:
+        if not data:
             raise ValueError("Data provided is zero-length")
         data = "".join("%02x" % i for i in data)
         return data.encode()
 
-b2a_hex = hexlify
-a2b_hex = unhexlify
+B2A_HEX = hexlify
+A2B_HEX = unhexlify
 
 PAD = '='
 
-table_a2b_base64 = [
+# pylint: disable=bad-whitespace
+TABLE_A2B_B64 = [
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,62, -1,-1,-1,63,
-    52,53,54,55, 56,57,58,59, 60,61,-1,-1, -1,-1,-1,-1, # Note PAD->-1 here
-    -1, 0, 1, 2,  3, 4, 5, 6,  7, 8, 9,10, 11,12,13,14,
-    15,16,17,18, 19,20,21,22, 23,24,25,-1, -1,-1,-1,-1,
-    -1,26,27,28, 29,30,31,32, 33,34,35,36, 37,38,39,40,
-    41,42,43,44, 45,46,47,48, 49,50,51,-1, -1,-1,-1,-1,
+    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1, # Note PAD->-1 here
+    -1, 0, 1, 2,  3, 4, 5, 6,  7, 8, 9, 10, 11, 12, 13, 14,
+    15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,-1, -1, -1, -1, -1,
+    -1, 26, 27, 28, 29, 30,31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+    41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
@@ -68,33 +70,31 @@ table_a2b_base64 = [
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
     -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
-    -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,    
+    -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1, -1,-1,-1,-1,
 ]
 def _transform(n):
     if n == -1:
         return '\xff'
-    else:
-        return chr(n)
-table_a2b_base64 = ''.join(map(_transform, table_a2b_base64))
-assert len(table_a2b_base64) == 256
+    return chr(n)
+TABLE_A2B_B64 = ''.join(map(_transform, TABLE_A2B_B64))
+assert len(TABLE_A2B_B64) == 256
 
-def a2b_base64(ascii):
+def a2b_base64(b64_data):
     "Decode a line of base64 data."
-
     res = []
     quad_pos = 0
     leftchar = 0
     leftbits = 0
     last_char_was_a_pad = False
 
-    for c in ascii:
-        c = chr(c)
-        if c == PAD:
+    for char in b64_data:
+        char = chr(char)
+        if char == PAD:
             if quad_pos > 2 or (quad_pos == 2 and last_char_was_a_pad):
                 break      # stop on 'xxx=' or on 'xx=='
             last_char_was_a_pad = True
         else:
-            n = ord(table_a2b_base64[ord(c)])
+            n = ord(TABLE_A2B_B64[ord(char)])
             if n == 0xff:
                 continue    # ignore strange characters
             #
@@ -118,34 +118,34 @@ def a2b_base64(ascii):
 
 # ____________________________________________________________
 
-table_b2a_base64 = (
+TABLE_B2A_B64 = (
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 
-def b2a_base64(bin):
+def b2a_base64(bin_data):
     "Base64-code line of data."
 
-    newlength = (len(bin) + 2) // 3
+    newlength = (len(bin_data) + 2) // 3
     newlength = newlength * 4 + 1
     res = []
 
     leftchar = 0
     leftbits = 0
-    for c in bin:
+    for char in bin_data:
         # Shift into our buffer, and output any 6bits ready
-        leftchar = (leftchar << 8) | c
+        leftchar = (leftchar << 8) | char
         leftbits += 8
-        res.append(table_b2a_base64[(leftchar >> (leftbits-6)) & 0x3f])
+        res.append(TABLE_B2A_B64[(leftchar >> (leftbits-6)) & 0x3f])
         leftbits -= 6
         if leftbits >= 6:
-            res.append(table_b2a_base64[(leftchar >> (leftbits-6)) & 0x3f])
+            res.append(TABLE_B2A_B64[(leftchar >> (leftbits-6)) & 0x3f])
             leftbits -= 6
     #
     if leftbits == 2:
-        res.append(table_b2a_base64[(leftchar & 3) << 4])
+        res.append(TABLE_B2A_B64[(leftchar & 3) << 4])
         res.append(PAD)
         res.append(PAD)
     elif leftbits == 4:
-        res.append(table_b2a_base64[(leftchar & 0xf) << 2])
+        res.append(TABLE_B2A_B64[(leftchar & 0xf) << 2])
         res.append(PAD)
     res.append('\n')
     return ''.join(res).encode('ascii')
