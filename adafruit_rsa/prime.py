@@ -19,7 +19,7 @@
 Implementation based on the book Algorithm Design by Michael T. Goodrich and
 Roberto Tamassia, 2002.
 """
-
+# pylint: disable=redefined-builtin, invalid-name
 from adafruit_rsa._compat import range
 import adafruit_rsa.common
 import adafruit_rsa.randnum
@@ -90,24 +90,21 @@ def miller_rabin_primality_testing(n, k):
     d = n - 1
     r = 0
 
-    while not (d & 1):
+    while not d & 1:
         r += 1
         d >>= 1
 
     # Test k witnesses.
-    for i in range(k):
+    for _ in range(k):
         # Generate random integer a, where 2 <= a <= (n - 2)
         a = adafruit_rsa.randnum.randint(n - 3) + 1
 
-        # x = pow(a, d, n)
         x = adafruit_rsa.core.fast_pow(a, d, n)
-        #print('x: ', x)
-        if x == 1 or x == n - 1:
+
+        if x in (1, n-1):
             continue
 
         for _ in range(r - 1):
-            # x = pow(x, 2, n)
-            # x = x**2 % n < TOO SLOW, memory error...
             x = adafruit_rsa.core.fast_pow(x, 2, n)
             if x == 1:
                 # n is composite.
@@ -146,7 +143,7 @@ def is_prime(number):
         return number in {2, 3, 5, 7}
 
     # Check for even numbers.
-    if not (number & 1):
+    if not number & 1:
         return False
 
     # Calculate minimum number of rounds.

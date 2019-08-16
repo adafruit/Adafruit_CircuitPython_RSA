@@ -20,9 +20,15 @@ This is the actual core RSA implementation, which is only defined
 mathematically on integers.
 """
 
+# pylint: disable=invalid-name
 from adafruit_rsa._compat import is_integer
 
-def fast_pow(x,e,m):
+def fast_pow(x, e, m):
+    """Performs fast modular exponentiation, saves RAM on small CPUs/micros.
+    :param int x: Base
+    :param int y: Exponent
+    :param int e: Second exponent
+    """
     X = x
     E = e
     Y = 1
@@ -37,6 +43,7 @@ def fast_pow(x,e,m):
 
 
 def assert_int(var, name):
+    """Asserts provided variable is an integer."""
     if is_integer(var):
         return
 

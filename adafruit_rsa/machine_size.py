@@ -63,12 +63,11 @@ def get_word_alignment(num, force_arch=64,
     if force_arch == 64 and _machine_word_size >= 64 and num > max_uint32:
         # 64-bit unsigned integer.
         return 64, 8, max_uint64, "Q"
-    elif num > max_uint16:
+    if num > max_uint16:
         # 32-bit unsigned integer
         return 32, 4, max_uint32, "L"
-    elif num > max_uint8:
+    if num > max_uint8:
         # 16-bit unsigned integer.
         return 16, 2, max_uint16, "H"
-    else:
-        # 8-bit unsigned integer.
-        return 8, 1, max_uint8, "B"
+    # 8-bit unsigned integer.
+    return 8, 1, max_uint8, "B"

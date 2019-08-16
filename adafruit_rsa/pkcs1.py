@@ -32,8 +32,6 @@ try:
     import hashlib
 except ImportError:
     import adafruit_rsa.tools.hashlib as hashlib
-
-from adafruit_rsa._compat import range
 from adafruit_rsa import common, transform, core
 
 # ASN.1 codes that describe the hash algorithm used.

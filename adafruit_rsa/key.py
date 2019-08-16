@@ -13,7 +13,6 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
 """RSA key generation code.
 
 Create new keys with the newkeys() function. It will give you a PublicKey and a
@@ -34,21 +33,19 @@ of pyasn1.
 """
 
 import adafruit_logging as logging
-import adafruit_rsa.tools.warnings
+import adafruit_rsa.tools.warnings as warnings
 
-from adafruit_rsa._compat import range
 import adafruit_rsa.prime
 import adafruit_rsa.pem
 import adafruit_rsa.common
 import adafruit_rsa.randnum
 import adafruit_rsa.core
 
-
+# pylint: disable=invalid-name, useless-object-inheritance, redefined-builtin, no-name-in-module
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
 DEFAULT_EXPONENT = 65537
-
 
 class AbstractKey(object):
     """Abstract superclass for private and public keys."""
@@ -180,7 +177,7 @@ class AbstractKey(object):
 
         return (adafruit_rsa.common.inverse(r, self.n) * blinded) % self.n
 
-
+# pylint: disable=abstract-method
 class PublicKey(AbstractKey):
     """Represents a public RSA key.
 
@@ -231,7 +228,7 @@ class PublicKey(AbstractKey):
         return self.n == other.n and self.e == other.e
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def __hash__(self):
         return hash((self.n, self.e))
@@ -373,6 +370,7 @@ class PrivateKey(AbstractKey):
 
     __slots__ = ('n', 'e', 'd', 'p', 'q', 'exp1', 'exp2', 'coef')
 
+    # pylint: disable=too-many-arguments
     def __init__(self, n, e, d, p, q):
         AbstractKey.__init__(self, n, e)
         self.d = d
@@ -389,7 +387,7 @@ class PrivateKey(AbstractKey):
 
     def __repr__(self):
         return 'PrivateKey(%i, %i, %i, %i, %i)' % (self.n, self.e, self.d,
-                                                    self.p, self.q)
+                                                   self.p, self.q)
 
     def __getstate__(self):
         """Returns the key as tuple for pickling."""
@@ -416,7 +414,7 @@ class PrivateKey(AbstractKey):
                 self.coef == other.coef)
 
     def __ne__(self, other):
-        return not (self == other)
+        return not self == other
 
     def __hash__(self):
         return hash((self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef))
@@ -434,9 +432,7 @@ class PrivateKey(AbstractKey):
         blind_r = adafruit_rsa.randnum.randint(self.n - 1)
         blinded = self.blind(encrypted, blind_r)  # blind before decrypting
         decrypted = adafruit_rsa.core.decrypt_int(blinded, self.d, self.n)
-        dec = adafruit_rsa.core.decrypt_int(encrypted, self.d, self.n)
 
-        ub = self.unblind(decrypted, blind_r)
         return self.unblind(decrypted, blind_r)
 
     def blinded_encrypt(self, message):
@@ -523,6 +519,7 @@ class PrivateKey(AbstractKey):
         from pyasn1.codec.der import encoder
 
         class AsnPrivKey(univ.Sequence):
+            """Creates PKCS#1 DER Formatted AsnPrivKey"""
             componentType = namedtype.NamedTypes(
                 namedtype.NamedType('version', univ.Integer()),
                 namedtype.NamedType('modulus', univ.Integer()),
@@ -675,7 +672,7 @@ def calculate_keys_custom_exponent(p, q, exponent):
         raise adafruit_rsa.common.NotRelativePrimeError(
             exponent, phi_n, ex.d,
             msg="e (%d) and phi_n (%d) are not relatively prime (divider=%i)" %
-                (exponent, phi_n, ex.d))
+            (exponent, phi_n, ex.d))
 
     if (exponent * d) % phi_n != 1:
         raise ValueError("e (%d) and d (%d) are not mult. inv. modulo "
@@ -737,7 +734,7 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_lev
         asked for. However, this makes key generation much slower. When False,
         `n`` may have slightly less bits.
     :param poolsize: the number of processes to use to generate the prime
-        numbers. 
+        numbers.
     :param exponent: the exponent for the key; only change this if you know
         what you're doing, as the exponent influences how difficult your
         private key can be cracked. A very common choice for e is 65537.
@@ -745,7 +742,7 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_lev
     :param log_level: Logger level, setting to DEBUG will log info about when
                         p and q are generating.
 
-    :returns: a tuple (:py:class:`adafruit_rsa.rsa.PublicKey`, :py:class:`adafruit_rsa.rsa.PrivateKey`)
+    :returns: a tuple (:py:class:`adafruit_rsa.PublicKey`, :py:class:`adafruit_rsa.PrivateKey`)
 
     The ``poolsize`` parameter was added in *Python-RSA 3.1* and requires
     Python 2.6 or newer.

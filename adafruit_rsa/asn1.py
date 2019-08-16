@@ -19,23 +19,26 @@
 Not all ASN.1-handling code use these definitions, but when it does, they should be here.
 """
 
-from adafruit_rsa.pyasn1.type import univ, namedtype, tag
+# pylint: disable=no-name-in-module
+from pyasn1.type import univ, namedtype, tag
 
 
 class PubKeyHeader(univ.Sequence):
+    """OpenSSL Public Key Header"""
     componentType = namedtype.NamedTypes(
-            namedtype.NamedType('oid', univ.ObjectIdentifier()),
-            namedtype.NamedType('parameters', univ.Null()),
+        namedtype.NamedType('oid', univ.ObjectIdentifier()),
+        namedtype.NamedType('parameters', univ.Null()),
     )
 
 
 class OpenSSLPubKey(univ.Sequence):
+    """Creates a PKCS#1 DER-encoded NamedType."""
     componentType = namedtype.NamedTypes(
-            namedtype.NamedType('header', PubKeyHeader()),
+        namedtype.NamedType('header', PubKeyHeader()),
 
-            # This little hack (the implicit tag) allows us to get a Bit String as Octet String
-            namedtype.NamedType('key', univ.OctetString().subtype(
-                    implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3))),
+        # This little hack (the implicit tag) allows us to get a Bit String as Octet String
+        namedtype.NamedType('key', univ.OctetString().subtype(
+            implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3))),
     )
 
 
@@ -48,6 +51,6 @@ class AsnPubKey(univ.Sequence):
     """
 
     componentType = namedtype.NamedTypes(
-            namedtype.NamedType('modulus', univ.Integer()),
-            namedtype.NamedType('publicExponent', univ.Integer()),
+        namedtype.NamedType('modulus', univ.Integer()),
+        namedtype.NamedType('publicExponent', univ.Integer()),
     )

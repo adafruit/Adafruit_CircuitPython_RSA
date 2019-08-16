@@ -13,21 +13,23 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-
-from adafruit_rsa._compat import zip
-
 """Common functionality shared by several modules."""
 
+# pylint: disable=redefined-builtin, invalid-name
+from adafruit_rsa._compat import zip
+
 def bit_length(int_type):
-    " Return the number of bits necessary to represent an integer in binary, excluding the sign and leading zeros "
+    """Return the number of bits necessary to represent an integer in binary,
+    excluding the sign and leading zeros"""
     length = 0
-    while (int_type):
+    while int_type:
         int_type >>= 1
         length += 1
-    return(length)
+    return length
 
 
 class NotRelativePrimeError(ValueError):
+    """Raises if provided a and b not relatively prime."""
     def __init__(self, a, b, d, msg=None):
         super(NotRelativePrimeError, self).__init__(
             msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d))
