@@ -22,12 +22,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 """
+# pylint: disable=invalid-name
 try:
+    # pylint: disable=import-self
     import hashlib
 except ImportError:
     hashlib = None
 
+
 def init():
+    """Create a new hashlib module with provided algorithms.
+    """
     for i in ("sha1", "sha224", "sha256", "sha384", "sha512", "md5"):
         c = getattr(hashlib, i, None)
         if not c:
@@ -35,12 +40,15 @@ def init():
             c = getattr(c, i)
         globals()[i] = c
 
-init()
-
-
 def new(algo, data=b""):
+    """Returns a new hashing object using the
+    named algorithm; optionally initialized with data (which must be
+    a bytes-like object).
+    """
     try:
         c = globals()[algo]
         return c(data)
     except KeyError:
         raise ValueError(algo)
+
+init()
