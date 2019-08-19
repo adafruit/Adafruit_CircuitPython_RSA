@@ -19,7 +19,7 @@
 Not all ASN.1-handling code use these definitions, but when it does, they should be here.
 """
 
-# pylint: disable=no-name-in-module
+# pylint: disable=no-name-in-module, too-few-public-methods
 from pyasn1.type import univ, namedtype, tag
 
 
