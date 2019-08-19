@@ -41,7 +41,7 @@ import adafruit_rsa.common
 import adafruit_rsa.randnum
 import adafruit_rsa.core
 
-# pylint: disable=invalid-name, useless-object-inheritance, redefined-builtin, no-name-in-module, too-few-public-methods, bad-option-value
+# pylint: disable=invalid-name, useless-object-inheritance, redefined-builtin, no-name-in-module, too-few-public-methods
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
 
