@@ -1,6 +1,9 @@
 The MIT License (MIT)
 
-Copyright (c) 2019 Brent Rubell for Adafruit Industries
+Python-RSA copyright 2011 Sybren A. Stüvel <sybren@stuvel.eu>
+https://github.com/sybrenstuvel/python-rsa/
+
+Modified by Brent Rubell for Adafruit Industries, 2019
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
