@@ -28,10 +28,7 @@ deduce where in the process the failure occurred. DO NOT PASS SUCH INFORMATION
 to your users.
 """
 import os
-try:
-    import hashlib
-except ImportError:
-    import adafruit_rsa.tools.hashlib as hashlib
+import adafruit_hashlib as hashlib
 from adafruit_rsa import common, transform, core
 
 # ASN.1 codes that describe the hash algorithm used.

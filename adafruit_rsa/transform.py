@@ -19,12 +19,7 @@
 From bytes to a number, number to bytes, etc.
 """
 
-# from __future__ import absolute_import
-
-try:
-    import binascii
-except ImportError:
-    from adafruit_rsa.tools import binascii
+from adafruit_binascii import hexlify
 from struct import pack
 
 from adafruit_rsa._compat import byte, is_integer
@@ -43,7 +38,7 @@ def bytes2int(raw_bytes):
 
     """
 
-    return int(binascii.hexlify(raw_bytes), 16)
+    return int(hexlify(raw_bytes), 16)
 
 
 def _int2bytes(number, block_size=None):
