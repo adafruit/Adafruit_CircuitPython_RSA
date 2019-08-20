@@ -33,7 +33,6 @@ of pyasn1.
 """
 
 import adafruit_logging as logging
-import adafruit_rsa.tools.warnings as warnings
 
 import adafruit_rsa.prime
 import adafruit_rsa.pem
@@ -499,12 +498,9 @@ class PrivateKey(AbstractKey):
         exp1, exp2, coef = map(int, priv[6:9])
 
         if (key.exp1, key.exp2, key.coef) != (exp1, exp2, coef):
-            warnings.warn(
-                'You have provided a malformed keyfile. Either the exponents '
-                'or the coefficient are incorrect. Using the correct values '
-                'instead.',
-                UserWarning,
-            )
+                log.debug('find_p_q(%i): Finding p', nbits)
+            log.debug('You have providied a malformed keyfile. Either the exponents'
+            'or the coefficient are incorrect.')
 
         return key
 
