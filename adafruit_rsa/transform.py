@@ -18,9 +18,8 @@
 
 From bytes to a number, number to bytes, etc.
 """
-
-from adafruit_binascii import hexlify
 from struct import pack
+from adafruit_binascii import hexlify
 
 from adafruit_rsa._compat import byte, is_integer
 from adafruit_rsa import common, machine_size
