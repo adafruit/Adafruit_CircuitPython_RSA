@@ -498,7 +498,6 @@ class PrivateKey(AbstractKey):
         exp1, exp2, coef = map(int, priv[6:9])
 
         if (key.exp1, key.exp2, key.coef) != (exp1, exp2, coef):
-                log.debug('find_p_q(%i): Finding p', nbits)
             log.debug('You have providied a malformed keyfile. Either the exponents'
             'or the coefficient are incorrect.')
 
