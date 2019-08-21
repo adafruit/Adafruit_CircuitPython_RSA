@@ -29,10 +29,13 @@
 #
 """
 `decode_priv_key.py`
-===========================================================
+===================================================================
 
 Generates RSA keys and decodes them using python-rsa
 for use with a CircuitPython secrets file.
+
+This script is designed to run on a computer,
+NOT a CircuitPython device.
 
 Requires Python-RSA (https://github.com/sybrenstuvel/python-rsa)
 
