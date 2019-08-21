@@ -18,8 +18,11 @@
 
 From bytes to a number, number to bytes, etc.
 """
+
+# from __future__ import absolute_import
+
 from struct import pack
-from adafruit_binascii import hexlify
+import adafruit_binascii as binascii
 
 from adafruit_rsa._compat import byte, is_integer
 from adafruit_rsa import common, machine_size
@@ -37,7 +40,7 @@ def bytes2int(raw_bytes):
 
     """
 
-    return int(hexlify(raw_bytes), 16)
+    return int(binascii.hexlify(raw_bytes), 16)
 
 
 def _int2bytes(number, block_size=None):
@@ -133,14 +136,11 @@ def bytes_leading(raw_bytes, needle=b'\x00'):
 def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
     """
     Convert an unsigned integer to bytes (base-256 representation)::
-
     Does not preserve leading zeros if you don't specify a chunk size or
     fill size.
-
     .. NOTE:
         You must not specify both fill_size and chunk_size. Only one
         of them is allowed.
-
     :param number:
         Integer value
     :param fill_size:
@@ -172,7 +172,7 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
         raise ValueError("You can either fill or pad chunks, but not both")
 
     # Ensure these are integers.
-    is_integer(number)
+    assert number & 1 == 0, "Number must be an unsigned integer, not a float."
 
     raw_bytes = b''
 
@@ -197,9 +197,10 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
                 "Need %d bytes for number, but fill size is %d" %
                 (length, fill_size)
             )
-        raw_bytes = b'\x00' + raw_bytes
+        raw_bytes = "% {}s".format(fill_size).encode() % raw_bytes
     elif chunk_size and chunk_size > 0:
         remainder = length % chunk_size
         if remainder:
-            raw_bytes = b'\x00' + raw_bytes
+            padding_size = chunk_size - remainder
+            raw_bytes = "% {}s".format(length + padding_size).encode() % raw_bytes
     return raw_bytes
