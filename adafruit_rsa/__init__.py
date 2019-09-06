@@ -29,4 +29,4 @@ from adafruit_rsa.pkcs1 import encrypt, decrypt, sign, verify, DecryptionError, 
 
 __author__ = "Sybren Stuvel, Barry Mead and Yesudeep Mangalapilly"
 __date__ = "2018-09-16"
-__version__ = '4.0'
+__version__ = '4.0.0'
