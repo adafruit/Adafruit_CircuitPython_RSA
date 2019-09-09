@@ -27,6 +27,8 @@ import adafruit_binascii as binascii
 from adafruit_rsa._compat import byte, is_integer
 from adafruit_rsa import common, machine_size
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 def bytes2int(raw_bytes):
     """Converts a list of bytes or an 8-bit string to an integer.

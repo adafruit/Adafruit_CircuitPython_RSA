@@ -31,6 +31,9 @@ import os
 import adafruit_hashlib as hashlib
 from adafruit_rsa import common, transform, core
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
+
 # ASN.1 codes that describe the hash algorithm used.
 HASH_ASN1 = {
     "MD5": b"\x30\x20\x30\x0c\x06\x08\x2a\x86\x48\x86\xf7\x0d\x02\x05\x05\x00\x04\x10",

@@ -19,6 +19,8 @@ from adafruit_binascii import a2b_base64, b2a_base64
 # pylint: disable=redefined-builtin
 from adafruit_rsa._compat import is_bytes, range
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 def _markers(pem_marker):
     """
