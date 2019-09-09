@@ -18,6 +18,9 @@
 # pylint: disable=redefined-builtin, invalid-name
 from adafruit_rsa._compat import zip
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
+
 def bit_length(int_type):
     """Return the number of bits necessary to represent an integer in binary,
     excluding the sign and leading zeros"""

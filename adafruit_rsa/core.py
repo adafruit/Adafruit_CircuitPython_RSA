@@ -23,6 +23,9 @@ mathematically on integers.
 # pylint: disable=invalid-name
 from adafruit_rsa._compat import is_integer
 
+__version__ = "0.0.0-auto.0"
+__repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
+
 def fast_pow(x, e, m):
     """Performs fast modular exponentiation, saves RAM on small CPUs/micros.
     :param int x: Base
