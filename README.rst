@@ -9,8 +9,8 @@ Introduction
     :target: https://discord.gg/nBQh6qu
     :alt: Discord
 
-.. image:: https://travis-ci.com/adafruit/Adafruit_CircuitPython_RSA.svg?branch=master
-    :target: https://travis-ci.com/adafruit/Adafruit_CircuitPython_RSA
+.. image:: https://github.com/adafruit/Adafruit_CircuitPython_RSA/workflows/Build%20CI/badge.svg
+    :target: https://github.com/adafruit/Adafruit_CircuitPython_RSA/actions/
     :alt: Build Status
 
 RSA implementation based on `Sybren A. Stüvel's python-rsa <https://github.com/sybrenstuvel/python-rsa>`_ pure-python
