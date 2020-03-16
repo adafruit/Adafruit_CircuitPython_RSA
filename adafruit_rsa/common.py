@@ -15,11 +15,11 @@
 #  limitations under the License.
 """Common functionality shared by several modules."""
 
-# pylint: disable=redefined-builtin, invalid-name
-from adafruit_rsa._compat import zip
+# pylint: disable=invalid-name
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
+
 
 def bit_length(int_type):
     """Return the number of bits necessary to represent an integer in binary,
@@ -33,9 +33,11 @@ def bit_length(int_type):
 
 class NotRelativePrimeError(ValueError):
     """Raises if provided a and b not relatively prime."""
+
     def __init__(self, a, b, d, msg=None):
         super(NotRelativePrimeError, self).__init__(
-            msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d))
+            msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d)
+        )
         self.a = a
         self.b = b
         self.d = d
@@ -66,7 +68,7 @@ def bit_size(num):
     try:
         return bit_length(num)
     except AttributeError:
-        raise TypeError('bit_size(num) only supports integers, not %r' % type(num))
+        raise TypeError("bit_size(num) only supports integers, not %r" % type(num))
 
 
 def byte_size(number):

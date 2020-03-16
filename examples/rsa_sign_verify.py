@@ -10,7 +10,7 @@ import adafruit_rsa
 (public_key, private_key) = adafruit_rsa.newkeys(496)
 
 # Create a new secret message
-message = 'Meet me at 6pm'
+message = "Meet me at 6pm"
 
 # Hash the message using SHA-224
 hash_method = "SHA-256"
@@ -18,4 +18,6 @@ signature = adafruit_rsa.sign(message, private_key, hash_method)
 
 # Verify Message Signature
 if adafruit_rsa.verify(message, signature, public_key) != hash_method:
-    raise ValueError("Verification failed - signature does not match secret message sent!")
+    raise ValueError(
+        "Verification failed - signature does not match secret message sent!"
+    )

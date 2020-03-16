@@ -19,15 +19,14 @@
 Implementation based on the book Algorithm Design by Michael T. Goodrich and
 Roberto Tamassia, 2002.
 """
-# pylint: disable=redefined-builtin, invalid-name
-from adafruit_rsa._compat import range
+# pylint: disable=invalid-name
 import adafruit_rsa.common
 import adafruit_rsa.randnum
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
-__all__ = ['getprime', 'are_relatively_prime']
+__all__ = ["getprime", "are_relatively_prime"]
 
 
 def gcd(p, q):
@@ -104,7 +103,7 @@ def miller_rabin_primality_testing(n, k):
 
         x = adafruit_rsa.core.fast_pow(a, d, n)
 
-        if x in (1, n-1):
+        if x in (1, n - 1):
             continue
 
         for _ in range(r - 1):
@@ -120,6 +119,7 @@ def miller_rabin_primality_testing(n, k):
             return False
     return True
 
+
 def pow_mod(x, y, z):
     "Calculate (x ** y) % z efficiently."
     number = 1
@@ -129,6 +129,7 @@ def pow_mod(x, y, z):
         y >>= 1
         x = x * x % z
     return number
+
 
 def is_prime(number):
     """Returns True if the number is prime, and False otherwise.

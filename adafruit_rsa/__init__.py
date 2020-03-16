@@ -24,8 +24,17 @@ prevent repetitions, or other common security improvements. Use with care.
 """
 
 from adafruit_rsa.key import newkeys, PrivateKey, PublicKey
-from adafruit_rsa.pkcs1 import encrypt, decrypt, sign, verify, DecryptionError, \
-    VerificationError, find_signature_hash, sign_hash, compute_hash
+from adafruit_rsa.pkcs1 import (
+    encrypt,
+    decrypt,
+    sign,
+    verify,
+    DecryptionError,
+    VerificationError,
+    find_signature_hash,
+    sign_hash,
+    compute_hash,
+)
 
 __author__ = "Sybren Stuvel, Barry Mead and Yesudeep Mangalapilly"
 __date__ = "2018-09-16"

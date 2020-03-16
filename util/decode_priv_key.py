@@ -45,12 +45,10 @@ import subprocess
 import rsa
 
 # Generate private and public RSA keys
-proc = subprocess.Popen(
-    ["openssl", "genrsa", "-out", "rsa_private.pem", "2048"])
+proc = subprocess.Popen(["openssl", "genrsa", "-out", "rsa_private.pem", "2048"])
 proc.wait()
 proc = subprocess.Popen(
-    ["openssl", "rsa", "-in", "rsa_private.pem",
-        "-pubout", "-out", "rsa_public.pem"]
+    ["openssl", "rsa", "-in", "rsa_private.pem", "-pubout", "-out", "rsa_public.pem"]
 )
 proc.wait()
 
@@ -63,4 +61,4 @@ except:
 pk = rsa.PrivateKey.load_pkcs1(private_key)
 
 print("Copy and paste this into your secrets.py file:\n")
-print("\"private_key\": " + str(pk)[10:] + ",")
+print('"private_key": ' + str(pk)[10:] + ",")

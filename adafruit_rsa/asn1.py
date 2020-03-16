@@ -25,22 +25,28 @@ from pyasn1.type import univ, namedtype, tag
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
+
 class PubKeyHeader(univ.Sequence):
     """OpenSSL Public Key Header"""
+
     componentType = namedtype.NamedTypes(
-        namedtype.NamedType('oid', univ.ObjectIdentifier()),
-        namedtype.NamedType('parameters', univ.Null()),
+        namedtype.NamedType("oid", univ.ObjectIdentifier()),
+        namedtype.NamedType("parameters", univ.Null()),
     )
 
 
 class OpenSSLPubKey(univ.Sequence):
     """Creates a PKCS#1 DER-encoded NamedType."""
-    componentType = namedtype.NamedTypes(
-        namedtype.NamedType('header', PubKeyHeader()),
 
+    componentType = namedtype.NamedTypes(
+        namedtype.NamedType("header", PubKeyHeader()),
         # This little hack (the implicit tag) allows us to get a Bit String as Octet String
-        namedtype.NamedType('key', univ.OctetString().subtype(
-            implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3))),
+        namedtype.NamedType(
+            "key",
+            univ.OctetString().subtype(
+                implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3)
+            ),
+        ),
     )
 
 
@@ -53,6 +59,6 @@ class AsnPubKey(univ.Sequence):
     """
 
     componentType = namedtype.NamedTypes(
-        namedtype.NamedType('modulus', univ.Integer()),
-        namedtype.NamedType('publicExponent', univ.Integer()),
+        namedtype.NamedType("modulus", univ.Integer()),
+        namedtype.NamedType("publicExponent", univ.Integer()),
     )
