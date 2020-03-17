@@ -16,11 +16,13 @@
 
 """Functions that load and write PEM-encoded files."""
 from adafruit_binascii import a2b_base64, b2a_base64
+
 # pylint: disable=redefined-builtin
-from adafruit_rsa._compat import is_bytes, range
+from adafruit_rsa._compat import is_bytes
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
+
 
 def _markers(pem_marker):
     """
@@ -28,10 +30,12 @@ def _markers(pem_marker):
     """
 
     if not is_bytes(pem_marker):
-        pem_marker = pem_marker.encode('ascii')
+        pem_marker = pem_marker.encode("ascii")
 
-    return (b'-----BEGIN ' + pem_marker + b'-----',
-            b'-----END ' + pem_marker + b'-----')
+    return (
+        b"-----BEGIN " + pem_marker + b"-----",
+        b"-----END " + pem_marker + b"-----",
+    )
 
 
 def load_pem(contents, pem_marker):
@@ -51,14 +55,14 @@ def load_pem(contents, pem_marker):
 
     # We want bytes, not text. If it's text, it can be converted to ASCII bytes.
     if not is_bytes(contents):
-        contents = contents.encode('ascii')
+        contents = contents.encode("ascii")
 
     (pem_start, pem_end) = _markers(pem_marker)
 
     pem_lines = []
     in_pem_part = False
 
-    for line in contents.split(b'\n'):
+    for line in contents.split(b"\n"):
         line = line.strip()
 
         # Skip empty lines
@@ -83,7 +87,7 @@ def load_pem(contents, pem_marker):
             break
 
         # Load fields
-        if b':' in line:
+        if b":" in line:
             continue
 
         pem_lines.append(line)
@@ -96,7 +100,7 @@ def load_pem(contents, pem_marker):
         raise ValueError('No PEM end marker "%s" found' % pem_end)
 
     # Base64-decode the contents
-    pem = b''.join(pem_lines)
+    pem = b"".join(pem_lines)
     return a2b_base64(pem)
 
 
@@ -114,14 +118,14 @@ def save_pem(contents, pem_marker):
 
     (pem_start, pem_end) = _markers(pem_marker)
 
-    b64 = b2a_base64(contents).replace(b'\n', b'')
+    b64 = b2a_base64(contents).replace(b"\n", b"")
     pem_lines = [pem_start]
 
     for block_start in range(0, len(b64), 64):
-        block = b64[block_start:block_start + 64]
+        block = b64[block_start : block_start + 64]
         pem_lines.append(block)
 
     pem_lines.append(pem_end)
-    pem_lines.append(b'')
+    pem_lines.append(b"")
 
-    return b'\n'.join(pem_lines)
+    return b"\n".join(pem_lines)

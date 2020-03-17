@@ -26,6 +26,7 @@ from adafruit_rsa._compat import byte
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
+
 def read_random_bits(nbits):
     """Reads 'nbits' random bits.
 
@@ -41,7 +42,7 @@ def read_random_bits(nbits):
     # Add the remaining random bits
     if rbits > 0:
         randomvalue = ord(os.urandom(1))
-        randomvalue >>= (8 - rbits)
+        randomvalue >>= 8 - rbits
         randomdata = byte(randomvalue) + randomdata
 
     return randomdata

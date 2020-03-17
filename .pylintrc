@@ -124,7 +124,6 @@ notes=FIXME,XXX
 
 
 [TYPECHECK]
-disable=bad-option-value
 
 # List of decorators that produce context managers, such as
 # contextlib.contextmanager. Add to this list to register other decorators that

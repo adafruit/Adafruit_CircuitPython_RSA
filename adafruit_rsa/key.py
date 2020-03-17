@@ -49,10 +49,11 @@ log.setLevel(logging.INFO)
 
 DEFAULT_EXPONENT = 65537
 
+
 class AbstractKey(object):
     """Abstract superclass for private and public keys."""
 
-    __slots__ = ('n', 'e')
+    __slots__ = ("n", "e")
 
     def __init__(self, n, e):
         self.n = n
@@ -97,7 +98,7 @@ class AbstractKey(object):
         """
 
     @classmethod
-    def load_pkcs1(cls, keyfile, format='PEM'):
+    def load_pkcs1(cls, keyfile, format="PEM"):
         """Loads a key in PKCS#1 DER or PEM format.
 
         :param keyfile: contents of a DER- or PEM-encoded file that contains
@@ -109,15 +110,17 @@ class AbstractKey(object):
         :return: the loaded key
         :rtype: AbstractKey
         """
-        raise NotImplementedError("Loading PEM Files not supported by this CircuitPython library.")
+        raise NotImplementedError(
+            "Loading PEM Files not supported by this CircuitPython library."
+        )
 
         # methods = {
         #    'PEM': cls._load_pkcs1_pem,
         #    'DER': cls._load_pkcs1_der,
-        #}
+        # }
 
-        #method = cls._assert_format_exists(format, methods)
-        #return method(keyfile)
+        # method = cls._assert_format_exists(format, methods)
+        # return method(keyfile)
 
     @staticmethod
     def _assert_format_exists(file_format, methods):
@@ -127,11 +130,12 @@ class AbstractKey(object):
         try:
             return methods[file_format]
         except KeyError:
-            formats = ', '.join(sorted(methods.keys()))
-            raise ValueError('Unsupported format: %r, try one of %s' % (file_format,
-                                                                        formats))
+            formats = ", ".join(sorted(methods.keys()))
+            raise ValueError(
+                "Unsupported format: %r, try one of %s" % (file_format, formats)
+            )
 
-    def save_pkcs1(self, format='PEM'):
+    def save_pkcs1(self, format="PEM"):
         """Saves the key in PKCS#1 DER or PEM format.
 
         :param format: the format to save; 'PEM' or 'DER'
@@ -141,8 +145,8 @@ class AbstractKey(object):
         """
 
         methods = {
-            'PEM': self._save_pkcs1_pem,
-            'DER': self._save_pkcs1_der,
+            "PEM": self._save_pkcs1_pem,
+            "DER": self._save_pkcs1_der,
         }
 
         method = self._assert_format_exists(format, methods)
@@ -179,6 +183,7 @@ class AbstractKey(object):
 
         return (adafruit_rsa.common.inverse(r, self.n) * blinded) % self.n
 
+
 # pylint: disable=abstract-method
 class PublicKey(AbstractKey):
     """Represents a public RSA key.
@@ -204,13 +209,13 @@ class PublicKey(AbstractKey):
 
     """
 
-    __slots__ = ('n', 'e')
+    __slots__ = ("n", "e")
 
     def __getitem__(self, key):
         return getattr(self, key)
 
     def __repr__(self):
-        return 'PublicKey(%i, %i)' % (self.n, self.e)
+        return "PublicKey(%i, %i)" % (self.n, self.e)
 
     def __getstate__(self):
         """Returns the key as tuple for pickling."""
@@ -255,12 +260,12 @@ class PublicKey(AbstractKey):
         PublicKey(2367317549, 65537)
 
         """
-
+        # pylint: disable=import-outside-toplevel
         from adafruit_rsa.tools.pyasn1.codec.der import decoder
         from adafruit_rsa.asn1 import AsnPubKey
 
         (priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
-        return cls(n=int(priv['modulus']), e=int(priv['publicExponent']))
+        return cls(n=int(priv["modulus"]), e=int(priv["publicExponent"]))
 
     def _save_pkcs1_der(self):
         """Saves the public key in PKCS#1 DER format.
@@ -268,14 +273,14 @@ class PublicKey(AbstractKey):
         :returns: the DER-encoded public key.
         :rtype: bytes
         """
-
+        # pylint: disable=import-outside-toplevel
         from pyasn1.codec.der import encoder
         from rsa.asn1 import AsnPubKey
 
         # Create the ASN object
         asn_key = AsnPubKey()
-        asn_key.setComponentByName('modulus', self.n)
-        asn_key.setComponentByName('publicExponent', self.e)
+        asn_key.setComponentByName("modulus", self.n)
+        asn_key.setComponentByName("publicExponent", self.e)
 
         return encoder.encode(asn_key)
 
@@ -291,7 +296,7 @@ class PublicKey(AbstractKey):
         :return: a PublicKey object
         """
 
-        der = adafruit_rsa.pem.load_pem(keyfile, 'RSA PUBLIC KEY')
+        der = adafruit_rsa.pem.load_pem(keyfile, "RSA PUBLIC KEY")
         return cls._load_pkcs1_der(der)
 
     def _save_pkcs1_pem(self):
@@ -302,7 +307,7 @@ class PublicKey(AbstractKey):
         """
 
         der = self._save_pkcs1_der()
-        return adafruit_rsa.pem.save_pem(der, 'RSA PUBLIC KEY')
+        return adafruit_rsa.pem.save_pem(der, "RSA PUBLIC KEY")
 
     @classmethod
     def load_pkcs1_openssl_pem(cls, keyfile):
@@ -320,7 +325,7 @@ class PublicKey(AbstractKey):
         :return: a PublicKey object
         """
 
-        der = adafruit_rsa.pem.load_pem(keyfile, 'PUBLIC KEY')
+        der = adafruit_rsa.pem.load_pem(keyfile, "PUBLIC KEY")
         return cls.load_pkcs1_openssl_der(der)
 
     @classmethod
@@ -333,17 +338,17 @@ class PublicKey(AbstractKey):
         :rtype: bytes
 
         """
-
+        # pylint: disable=import-outside-toplevel
         from adafruit_rsa.asn1 import OpenSSLPubKey
         from pyasn1.codec.der import decoder
         from pyasn1.type import univ
 
         (keyinfo, _) = decoder.decode(keyfile, asn1Spec=OpenSSLPubKey())
 
-        if keyinfo['header']['oid'] != univ.ObjectIdentifier('1.2.840.113549.1.1.1'):
+        if keyinfo["header"]["oid"] != univ.ObjectIdentifier("1.2.840.113549.1.1.1"):
             raise TypeError("This is not a DER-encoded OpenSSL-compatible public key")
 
-        return cls._load_pkcs1_der(keyinfo['key'][1:])
+        return cls._load_pkcs1_der(keyinfo["key"][1:])
 
 
 class PrivateKey(AbstractKey):
@@ -370,7 +375,7 @@ class PrivateKey(AbstractKey):
 
     """
 
-    __slots__ = ('n', 'e', 'd', 'p', 'q', 'exp1', 'exp2', 'coef')
+    __slots__ = ("n", "e", "d", "p", "q", "exp1", "exp2", "coef")
 
     # pylint: disable=too-many-arguments
     def __init__(self, n, e, d, p, q):
@@ -388,8 +393,13 @@ class PrivateKey(AbstractKey):
         return getattr(self, key)
 
     def __repr__(self):
-        return 'PrivateKey(%i, %i, %i, %i, %i)' % (self.n, self.e, self.d,
-                                                   self.p, self.q)
+        return "PrivateKey(%i, %i, %i, %i, %i)" % (
+            self.n,
+            self.e,
+            self.d,
+            self.p,
+            self.q,
+        )
 
     def __getstate__(self):
         """Returns the key as tuple for pickling."""
@@ -406,20 +416,24 @@ class PrivateKey(AbstractKey):
         if not isinstance(other, PrivateKey):
             return False
 
-        return (self.n == other.n and
-                self.e == other.e and
-                self.d == other.d and
-                self.p == other.p and
-                self.q == other.q and
-                self.exp1 == other.exp1 and
-                self.exp2 == other.exp2 and
-                self.coef == other.coef)
+        return (
+            self.n == other.n
+            and self.e == other.e
+            and self.d == other.d
+            and self.p == other.p
+            and self.q == other.q
+            and self.exp1 == other.exp1
+            and self.exp2 == other.exp2
+            and self.coef == other.coef
+        )
 
     def __ne__(self, other):
         return not self == other
 
     def __hash__(self):
-        return hash((self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef))
+        return hash(
+            (self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef)
+        )
 
     def blinded_decrypt(self, encrypted):
         """Decrypts the message using blinding to prevent side-channel attacks.
@@ -474,7 +488,10 @@ class PrivateKey(AbstractKey):
 
         """
 
-        from adafruit_rsa.tools.pyasn1.codec.der import decoder
+        from adafruit_rsa.tools.pyasn1.codec.der import (  # pylint: disable=import-outside-toplevel
+            decoder,
+        )
+
         (priv, _) = decoder.decode(keyfile)
 
         # ASN.1 contents of DER encoded private key:
@@ -493,7 +510,7 @@ class PrivateKey(AbstractKey):
         # }
 
         if priv[0] != 0:
-            raise ValueError('Unable to read this file, version %s != 0' % priv[0])
+            raise ValueError("Unable to read this file, version %s != 0" % priv[0])
 
         as_ints = map(int, priv[1:6])
         key = cls(*as_ints)
@@ -501,8 +518,10 @@ class PrivateKey(AbstractKey):
         exp1, exp2, coef = map(int, priv[6:9])
 
         if (key.exp1, key.exp2, key.coef) != (exp1, exp2, coef):
-            log.debug('You have providied a malformed keyfile. Either the exponents'
-                      'or the coefficient are incorrect.')
+            log.debug(
+                "You have providied a malformed keyfile. Either the exponents"
+                "or the coefficient are incorrect."
+            )
 
         return key
 
@@ -512,35 +531,36 @@ class PrivateKey(AbstractKey):
         :returns: the DER-encoded private key.
         :rtype: bytes
         """
-
+        # pylint: disable=import-outside-toplevel
         from pyasn1.type import univ, namedtype
         from pyasn1.codec.der import encoder
 
         class AsnPrivKey(univ.Sequence):
             """Creates PKCS#1 DER Formatted AsnPrivKey"""
+
             componentType = namedtype.NamedTypes(
-                namedtype.NamedType('version', univ.Integer()),
-                namedtype.NamedType('modulus', univ.Integer()),
-                namedtype.NamedType('publicExponent', univ.Integer()),
-                namedtype.NamedType('privateExponent', univ.Integer()),
-                namedtype.NamedType('prime1', univ.Integer()),
-                namedtype.NamedType('prime2', univ.Integer()),
-                namedtype.NamedType('exponent1', univ.Integer()),
-                namedtype.NamedType('exponent2', univ.Integer()),
-                namedtype.NamedType('coefficient', univ.Integer()),
+                namedtype.NamedType("version", univ.Integer()),
+                namedtype.NamedType("modulus", univ.Integer()),
+                namedtype.NamedType("publicExponent", univ.Integer()),
+                namedtype.NamedType("privateExponent", univ.Integer()),
+                namedtype.NamedType("prime1", univ.Integer()),
+                namedtype.NamedType("prime2", univ.Integer()),
+                namedtype.NamedType("exponent1", univ.Integer()),
+                namedtype.NamedType("exponent2", univ.Integer()),
+                namedtype.NamedType("coefficient", univ.Integer()),
             )
 
         # Create the ASN object
         asn_key = AsnPrivKey()
-        asn_key.setComponentByName('version', 0)
-        asn_key.setComponentByName('modulus', self.n)
-        asn_key.setComponentByName('publicExponent', self.e)
-        asn_key.setComponentByName('privateExponent', self.d)
-        asn_key.setComponentByName('prime1', self.p)
-        asn_key.setComponentByName('prime2', self.q)
-        asn_key.setComponentByName('exponent1', self.exp1)
-        asn_key.setComponentByName('exponent2', self.exp2)
-        asn_key.setComponentByName('coefficient', self.coef)
+        asn_key.setComponentByName("version", 0)
+        asn_key.setComponentByName("modulus", self.n)
+        asn_key.setComponentByName("publicExponent", self.e)
+        asn_key.setComponentByName("privateExponent", self.d)
+        asn_key.setComponentByName("prime1", self.p)
+        asn_key.setComponentByName("prime2", self.q)
+        asn_key.setComponentByName("exponent1", self.exp1)
+        asn_key.setComponentByName("exponent2", self.exp2)
+        asn_key.setComponentByName("coefficient", self.coef)
 
         return encoder.encode(asn_key)
 
@@ -557,7 +577,7 @@ class PrivateKey(AbstractKey):
         :return: a PrivateKey object
         """
 
-        der = adafruit_rsa.pem.load_pem(keyfile, b'RSA PRIVATE KEY')
+        der = adafruit_rsa.pem.load_pem(keyfile, b"RSA PRIVATE KEY")
         return cls._load_pkcs1_der(der)
 
     def _save_pkcs1_pem(self):
@@ -568,7 +588,7 @@ class PrivateKey(AbstractKey):
         """
 
         der = self._save_pkcs1_der()
-        return adafruit_rsa.pem.save_pem(der, b'RSA PRIVATE KEY')
+        return adafruit_rsa.pem.save_pem(der, b"RSA PRIVATE KEY")
 
 
 def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
@@ -611,9 +631,9 @@ def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
     qbits = nbits - shift
 
     # Choose the two initial primes
-    log.debug('find_p_q(%i): Finding p', nbits)
+    log.debug("find_p_q(%i): Finding p", nbits)
     p = getprime_func(pbits)
-    log.debug('find_p_q(%i): Finding q', nbits)
+    log.debug("find_p_q(%i): Finding q", nbits)
     q = getprime_func(qbits)
 
     def is_acceptable(p, q):
@@ -668,13 +688,18 @@ def calculate_keys_custom_exponent(p, q, exponent):
         d = adafruit_rsa.common.inverse(exponent, phi_n)
     except adafruit_rsa.common.NotRelativePrimeError as ex:
         raise adafruit_rsa.common.NotRelativePrimeError(
-            exponent, phi_n, ex.d,
-            msg="e (%d) and phi_n (%d) are not relatively prime (divider=%i)" %
-            (exponent, phi_n, ex.d))
+            exponent,
+            phi_n,
+            ex.d,
+            msg="e (%d) and phi_n (%d) are not relatively prime (divider=%i)"
+            % (exponent, phi_n, ex.d),
+        )
 
     if (exponent * d) % phi_n != 1:
-        raise ValueError("e (%d) and d (%d) are not mult. inv. modulo "
-                         "phi_n (%d)" % (exponent, d, phi_n))
+        raise ValueError(
+            "e (%d) and d (%d) are not mult. inv. modulo "
+            "phi_n (%d)" % (exponent, d, phi_n)
+        )
 
     return exponent, d
 
@@ -720,7 +745,9 @@ def gen_keys(nbits, getprime_func, accurate=True, exponent=DEFAULT_EXPONENT):
     return p, q, e, d
 
 
-def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_level="INFO"):
+def newkeys(
+    nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_level="INFO"
+):
     """Generates public and private keys, and returns them as (pub, priv).
 
     The public key is also known as the 'encryption key', and is a
@@ -748,10 +775,10 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_lev
     """
 
     if nbits < 16:
-        raise ValueError('Key too small')
+        raise ValueError("Key too small")
 
     if poolsize < 1:
-        raise ValueError('Pool size (%i) should be >= 1' % poolsize)
+        raise ValueError("Pool size (%i) should be >= 1" % poolsize)
 
     if log_level == "DEBUG":
         log.setLevel(logging.DEBUG)
@@ -764,10 +791,7 @@ def newkeys(nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_lev
     # Create the key objects
     n = p * q
 
-    return (
-        PublicKey(n, e),
-        PrivateKey(n, e, d, p, q)
-    )
+    return (PublicKey(n, e), PrivateKey(n, e, d, p, q))
 
 
-__all__ = ['PublicKey', 'PrivateKey', 'newkeys']
+__all__ = ["PublicKey", "PrivateKey", "newkeys"]

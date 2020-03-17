@@ -3,6 +3,7 @@
 import time
 import adafruit_rsa
 
+
 def test_encrypt_decrypt():
     # Generate general purpose keys
     (pub, priv) = adafruit_rsa.newkeys(256, log_level="DEBUG")
@@ -25,6 +26,7 @@ def test_mod_msg():
         raise "ERROR: Decrypted message matches original"
     except adafruit_rsa.pkcs1.DecryptionError:
         pass
+
 
 # pylint: disable=unused-variable
 def test_randomness():
@@ -95,8 +97,10 @@ all_tests = [
 start_time = time.monotonic()
 # pylint: disable=consider-using-enumerate
 for test_num, test_name in enumerate(all_tests, start=0):
-#for i in range(0, len(all_tests)):
+    # for i in range(0, len(all_tests)):
     print("Testing: {}".format(test_name))
     all_tests[test_num]()
     print("OK!")
-print("Ran {} tests in {} seconds".format(len(all_tests), time.monotonic() - start_time))
+print(
+    "Ran {} tests in {} seconds".format(len(all_tests), time.monotonic() - start_time)
+)
