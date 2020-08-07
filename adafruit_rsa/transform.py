@@ -202,7 +202,7 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
             raise OverflowError(
                 "Need %d bytes for number, but fill size is %d" % (length, fill_size)
             )
-        raw_bytes = "% {}s".format(fill_size).encode() % raw_bytes
+        raw_bytes = (b"\x00" * (fill_size - len(raw_bytes))) + raw_bytes
     elif chunk_size and chunk_size > 0:
         remainder = length % chunk_size
         if remainder:
