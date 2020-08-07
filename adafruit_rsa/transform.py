@@ -178,7 +178,7 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
         raise ValueError("You can either fill or pad chunks, but not both")
 
     # Ensure these are integers.
-    assert number & 1 == 0, "Number must be an unsigned integer, not a float."
+    assert isinstance(number, int), "Number must be an unsigned integer, not a float."
 
     raw_bytes = b""
 
