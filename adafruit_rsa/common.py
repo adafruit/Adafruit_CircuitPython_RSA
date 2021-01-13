@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
-#  Copyright 2011 Sybren A. Stüvel <sybren@stuvel.eu>
-#
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#      https://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
+
 """Common functionality shared by several modules."""
 
 # pylint: disable=invalid-name
@@ -35,7 +25,7 @@ class NotRelativePrimeError(ValueError):
     """Raises if provided a and b not relatively prime."""
 
     def __init__(self, a, b, d, msg=None):
-        super(NotRelativePrimeError, self).__init__(
+        super().__init__(
             msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d)
         )
         self.a = a
@@ -67,8 +57,10 @@ def bit_size(num):
 
     try:
         return bit_length(num)
-    except AttributeError:
-        raise TypeError("bit_size(num) only supports integers, not %r" % type(num))
+    except AttributeError as err:
+        raise TypeError(
+            "bit_size(num) only supports integers, not %r" % type(num)
+        ) from err
 
 
 def byte_size(number):
@@ -121,8 +113,7 @@ def ceil_div(num, div):
 
 
 def extended_gcd(a, b):
-    """Returns a tuple (r, i, j) such that r = gcd(a, b) = ia + jb
-    """
+    """Returns a tuple (r, i, j) such that r = gcd(a, b) = ia + jb"""
     # r = gcd(a,b) i = multiplicitive inverse of a mod b
     #      or      j = multiplicitive inverse of b mod a
     # Neg return values for i or j are made positive mod b or a respectively

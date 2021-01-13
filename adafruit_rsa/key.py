@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
+# SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
-#  Copyright 2011 Sybren A. Stüvel <sybren@stuvel.eu>
-#
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
-#  You may obtain a copy of the License at
-#
-#      https://www.apache.org/licenses/LICENSE-2.0
-#
-#  Unless required by applicable law or agreed to in writing, software
-#  distributed under the License is distributed on an "AS IS" BASIS,
-#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#  See the License for the specific language governing permissions and
-#  limitations under the License.
+# SPDX-License-Identifier: Apache-2.0
+
 """RSA key generation code.
 
 Create new keys with the newkeys() function. It will give you a PublicKey and a
@@ -124,16 +114,15 @@ class AbstractKey(object):
 
     @staticmethod
     def _assert_format_exists(file_format, methods):
-        """Checks whether the given file format exists in 'methods'.
-        """
+        """Checks whether the given file format exists in 'methods'."""
 
         try:
             return methods[file_format]
-        except KeyError:
+        except KeyError as err:
             formats = ", ".join(sorted(methods.keys()))
             raise ValueError(
                 "Unsupported format: %r, try one of %s" % (file_format, formats)
-            )
+            ) from err
 
     def save_pkcs1(self, format="PEM"):
         """Saves the key in PKCS#1 DER or PEM format.
@@ -639,8 +628,8 @@ def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
     def is_acceptable(p, q):
         """Returns True iff p and q are acceptable:
 
-            - p and q differ
-            - (p * q) has the right nr of bits (when accurate=True)
+        - p and q differ
+        - (p * q) has the right nr of bits (when accurate=True)
         """
 
         if p == q:

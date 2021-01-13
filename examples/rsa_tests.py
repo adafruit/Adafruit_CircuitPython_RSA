@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 """Adafruit RSA Tests
 """
 import time
@@ -14,8 +17,7 @@ def test_encrypt_decrypt():
 
 
 def test_mod_msg():
-    """Modifies an enecrypted message, asserts failure
-    """
+    """Modifies an enecrypted message, asserts failure"""
     # Generate general purpose keys
     (pub, priv) = adafruit_rsa.newkeys(256, log_level="DEBUG")
     msg = "blinka".encode("utf-8")
@@ -30,8 +32,7 @@ def test_mod_msg():
 
 # pylint: disable=unused-variable
 def test_randomness():
-    """Encrypt msg 2x yields diff. encrypted values.
-    """
+    """Encrypt msg 2x yields diff. encrypted values."""
     # Generate general purpose keys
     (pub, priv) = adafruit_rsa.newkeys(256, log_level="DEBUG")
     msg = "blinka".encode("utf-8")
@@ -41,8 +42,7 @@ def test_randomness():
 
 
 def test_sign_verify_sha256():
-    """Test SHA256 sign and verify the message.
-    """
+    """Test SHA256 sign and verify the message."""
     (pub, priv) = adafruit_rsa.newkeys(496, log_level="DEBUG")
     msg = "red apple"
     signature = adafruit_rsa.sign(msg, priv, "SHA-256")
@@ -50,8 +50,7 @@ def test_sign_verify_sha256():
 
 
 def test_sign_verify_sha384():
-    """Test SHA-384 sign and verify the message.
-    """
+    """Test SHA-384 sign and verify the message."""
     (pub, priv) = adafruit_rsa.newkeys(624, log_level="DEBUG")
     msg = "red apple"
     signature = adafruit_rsa.sign(msg, priv, "SHA-384")
@@ -59,8 +58,7 @@ def test_sign_verify_sha384():
 
 
 def test_sign_verify_sha512():
-    """Test SHA-512 sign and verify the message.
-    """
+    """Test SHA-512 sign and verify the message."""
     (pub, priv) = adafruit_rsa.newkeys(752, log_level="DEBUG")
     msg = "red apple"
     signature = adafruit_rsa.sign(msg, priv, "SHA-512")
