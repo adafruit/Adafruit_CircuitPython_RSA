@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+
 # Adafruit_CircuitPython_RSA Encryption/Decryption
 import adafruit_rsa
 
