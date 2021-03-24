@@ -32,7 +32,7 @@ proc.wait()
 try:
     with open("rsa_private.pem", "rb") as file:
         private_key = file.read()
-except:
+except:  # pylint: disable=bare-except
     print("No file named rsa_private.pem found in directory.")
 pk = rsa.PrivateKey.load_pkcs1(private_key)
 
