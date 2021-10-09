@@ -18,7 +18,7 @@ to your users.
 """
 import os
 import adafruit_hashlib as hashlib
-from adafruit_rsa import common, transform, core
+from adafruit_rsa import common, core
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
@@ -157,9 +157,9 @@ def encrypt(message, pub_key):
 
     keylength = common.byte_size(pub_key.n)
     padded = _pad_for_encryption(message, keylength)
-    payload = transform.bytes2int(padded)
+    payload = common.bytes2int(padded)
     encrypted = core.encrypt_int(payload, pub_key.e, pub_key.n)
-    block = transform.int2bytes(encrypted, keylength)
+    block = common.int2bytes(encrypted, keylength)
 
     return block
 
@@ -216,9 +216,9 @@ def decrypt(crypto, priv_key):
     """
 
     blocksize = common.byte_size(priv_key.n)
-    encrypted = transform.bytes2int(crypto)
+    encrypted = common.bytes2int(crypto)
     decrypted = priv_key.blinded_decrypt(encrypted)
-    cleartext = transform.int2bytes(decrypted, blocksize)
+    cleartext = common.int2bytes(decrypted, blocksize)
 
     # Find the 00 separator between the padding and the message
     try:
@@ -256,9 +256,9 @@ def sign_hash(hash_value, priv_key, hash_method):
     keylength = common.byte_size(priv_key.n)
     padded = _pad_for_signing(cleartext, keylength)
 
-    payload = transform.bytes2int(padded)
+    payload = common.bytes2int(padded)
     encrypted = priv_key.blinded_encrypt(payload)
-    block = transform.int2bytes(encrypted, keylength)
+    block = common.int2bytes(encrypted, keylength)
 
     return block
 
@@ -301,9 +301,9 @@ def verify(message, signature, pub_key):
     """
 
     keylength = common.byte_size(pub_key.n)
-    encrypted = transform.bytes2int(signature)
+    encrypted = common.bytes2int(signature)
     decrypted = core.decrypt_int(encrypted, pub_key.e, pub_key.n)
-    clearsig = transform.int2bytes(decrypted, keylength)
+    clearsig = common.int2bytes(decrypted, keylength)
 
     # Get the hash method
     method_name = _find_method_hash(clearsig)
@@ -332,9 +332,9 @@ def find_signature_hash(signature, pub_key):
     """
 
     keylength = common.byte_size(pub_key.n)
-    encrypted = transform.bytes2int(signature)
+    encrypted = common.bytes2int(signature)
     decrypted = core.decrypt_int(encrypted, pub_key.e, pub_key.n)
-    clearsig = transform.int2bytes(decrypted, keylength)
+    clearsig = common.int2bytes(decrypted, keylength)
 
     return _find_method_hash(clearsig)
 

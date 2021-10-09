@@ -10,7 +10,6 @@ Roberto Tamassia, 2002.
 """
 # pylint: disable=invalid-name
 import adafruit_rsa.common
-import adafruit_rsa.randnum
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"

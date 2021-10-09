@@ -27,7 +27,6 @@ import adafruit_logging as logging
 import adafruit_rsa.prime
 import adafruit_rsa.pem
 import adafruit_rsa.common
-import adafruit_rsa.randnum
 import adafruit_rsa.core
 
 __version__ = "0.0.0-auto.0"
@@ -434,7 +433,7 @@ class PrivateKey(AbstractKey):
         :rtype: int
         """
 
-        blind_r = adafruit_rsa.randnum.randint(self.n - 1)
+        blind_r = adafruit_rsa.common.randint(self.n - 1)
         blinded = self.blind(encrypted, blind_r)  # blind before decrypting
         decrypted = adafruit_rsa.core.decrypt_int(blinded, self.d, self.n)
 
@@ -450,7 +449,7 @@ class PrivateKey(AbstractKey):
         :rtype: int
         """
 
-        blind_r = adafruit_rsa.randnum.randint(self.n - 1)
+        blind_r = adafruit_rsa.common.randint(self.n - 1)
         blinded = self.blind(message, blind_r)  # blind before encrypting
         encrypted = adafruit_rsa.core.encrypt_int(blinded, self.d, self.n)
         return self.unblind(encrypted, blind_r)
