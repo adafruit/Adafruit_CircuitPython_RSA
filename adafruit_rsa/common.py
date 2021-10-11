@@ -9,8 +9,6 @@
 
 import os
 
-from adafruit_rsa._compat import byte
-
 from struct import pack
 import adafruit_binascii as binascii
 
@@ -19,16 +17,6 @@ from adafruit_rsa import machine_size
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
-
-
-def bit_length(int_type):
-    """Return the number of bits necessary to represent an integer in binary,
-    excluding the sign and leading zeros"""
-    length = 0
-    while int_type:
-        int_type >>= 1
-        length += 1
-    return length
 
 
 class NotRelativePrimeError(ValueError):
@@ -41,6 +29,16 @@ class NotRelativePrimeError(ValueError):
         self.a = a
         self.b = b
         self.d = d
+
+
+def bit_length(int_type):
+    """Return the number of bits necessary to represent an integer in binary,
+    excluding the sign and leading zeros"""
+    length = 0
+    while int_type:
+        int_type >>= 1
+        length += 1
+    return length
 
 
 def bit_size(num):
@@ -253,11 +251,11 @@ def randint(maxvalue):
     is.
     """
 
-    bit_size = bit_size(maxvalue)
+    _bit_size = bit_size(maxvalue)
 
     tries = 0
     while True:
-        value = read_random_int(bit_size)
+        value = read_random_int(_bit_size)
         if value <= maxvalue:
             break
 
@@ -265,7 +263,7 @@ def randint(maxvalue):
             # After a lot of tries to get the right number of bits but still
             # smaller than maxvalue, decrease the number of bits by 1. That'll
             # dramatically increase the chances to get a large enough number.
-            bit_size -= 1
+            _bit_size -= 1
         tries += 1
 
     return value

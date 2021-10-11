@@ -29,6 +29,7 @@ import adafruit_rsa.pem
 import adafruit_rsa.common
 import adafruit_rsa.core
 
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
@@ -249,7 +250,7 @@ class PublicKey(AbstractKey):
 
         """
         # pylint: disable=import-outside-toplevel
-        from adafruit_rsa.tools.pyasn1.codec.der import decoder
+        from pyasn1.codec.der import decoder
         from adafruit_rsa.asn1 import AsnPubKey
 
         (priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
@@ -476,7 +477,7 @@ class PrivateKey(AbstractKey):
 
         """
 
-        from adafruit_rsa.tools.pyasn1.codec.der import (  # pylint: disable=import-outside-toplevel
+        from pyasn1.codec.der import (  # pylint: disable=import-outside-toplevel
             decoder,
         )
 
