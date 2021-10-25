@@ -57,6 +57,11 @@ Usage Example
 
 Examples for this library are avaliable in the examples/ folder.
 
+Documentation
+=============
+
+API documentation for this library can be found on `Read the Docs <https://circuitpython.readthedocs.io/projects/rsa/en/latest/>`_.
+
 Contributing
 ============
 
