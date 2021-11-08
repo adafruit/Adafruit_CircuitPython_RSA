@@ -21,12 +21,12 @@ import subprocess
 import rsa
 
 # Generate private and public RSA keys
-proc = subprocess.Popen(["openssl", "genrsa", "-out", "rsa_private.pem", "2048"])
-proc.wait()
-proc = subprocess.Popen(
+with subprocess.Popen(["openssl", "genrsa", "-out", "rsa_private.pem", "2048"]) as proc:
+    proc.wait()
+with subprocess.Popen(
     ["openssl", "rsa", "-in", "rsa_private.pem", "-pubout", "-out", "rsa_public.pem"]
-)
-proc.wait()
+) as proc:
+    proc.wait()
 
 # Open generated private key file
 try:
