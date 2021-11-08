@@ -24,8 +24,8 @@ def test_mod_msg():
     msg_enc = adafruit_rsa.encrypt(msg, pub)
     msg_enc = msg_enc[:-1] + b"X"  # change the last byte
     try:
-        adafruit_rsa.decrypt(msg_enc, priv)
-        raise "ERROR: Decrypted message matches original"
+        msg_dec = adafruit_rsa.decrypt(msg_enc, priv)
+        assert msg_dec != msg, "ERROR: Decrypted message matches original"
     except adafruit_rsa.pkcs1.DecryptionError:
         pass
 
