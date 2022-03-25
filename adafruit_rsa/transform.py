@@ -16,11 +16,16 @@ import adafruit_binascii as binascii
 from adafruit_rsa._compat import byte, is_integer
 from adafruit_rsa import common, machine_size
 
+try:
+    from typing import Optional
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 
-def bytes2int(raw_bytes):
+def bytes2int(raw_bytes: bytes) -> int:
     """Converts a list of bytes or an 8-bit string to an integer.
 
     When using unicode strings, encode it to some encoding like UTF8 first.
@@ -35,7 +40,7 @@ def bytes2int(raw_bytes):
     return int(binascii.hexlify(raw_bytes), 16)
 
 
-def _int2bytes(number, block_size=None):
+def _int2bytes(number: int, block_size: Optional[int] = None) -> bytes:
     """Converts a number to a string of bytes.
 
     Usage::
@@ -103,15 +108,15 @@ def _int2bytes(number, block_size=None):
     return padding + b"".join(raw_bytes)
 
 
-def bytes_leading(raw_bytes, needle=b"\x00"):
+def bytes_leading(raw_bytes: bytes, needle: bytes = b"\x00") -> int:
     """
     Finds the number of prefixed byte occurrences in the haystack.
 
     Useful when you want to deal with padding.
 
-    :param raw_bytes:
+    :param bytes raw_bytes:
         Raw bytes.
-    :param needle:
+    :param bytes needle:
         The byte to count. Default \x00.
     :returns:
         The number of leading needle bytes.
@@ -128,7 +133,12 @@ def bytes_leading(raw_bytes, needle=b"\x00"):
     return leading
 
 
-def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
+def int2bytes(
+    number: int,
+    fill_size: Optional[int] = None,
+    chunk_size: Optional[int] = None,
+    overflow: bool = False,
+) -> bytes:
     """
     Convert an unsigned integer to bytes (base-256 representation)::
     Does not preserve leading zeros if you don't specify a chunk size or
@@ -136,7 +146,7 @@ def int2bytes(number, fill_size=None, chunk_size=None, overflow=False):
     .. NOTE:
         You must not specify both fill_size and chunk_size. Only one
         of them is allowed.
-    :param number:
+    :param int number:
         Integer value
     :param fill_size:
         If the optional fill size is given the length of the resulting
