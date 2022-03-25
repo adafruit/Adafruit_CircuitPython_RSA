@@ -9,11 +9,16 @@ from adafruit_binascii import a2b_base64, b2a_base64
 # pylint: disable=redefined-builtin
 from adafruit_rsa._compat import is_bytes
 
+try:
+    from typing import Union, Tuple
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 
-def _markers(pem_marker):
+def _markers(pem_marker: Union[bytes, str]) -> Tuple[bytes, bytes]:
     """
     Returns the start and end PEM markers, as bytes.
     """
@@ -27,11 +32,11 @@ def _markers(pem_marker):
     )
 
 
-def load_pem(contents, pem_marker):
+def load_pem(contents: Union[bytes, str], pem_marker: Union[bytes, str]) -> bytes:
     """Loads a PEM file.
 
-    :param contents: the contents of the file to interpret
-    :param pem_marker: the marker of the PEM content, such as 'RSA PRIVATE KEY'
+    :param bytes|str contents: the contents of the file to interpret
+    :param bytes|str pem_marker: the marker of the PEM content, such as 'RSA PRIVATE KEY'
         when your file has '-----BEGIN RSA PRIVATE KEY-----' and
         '-----END RSA PRIVATE KEY-----' markers.
 
@@ -93,10 +98,10 @@ def load_pem(contents, pem_marker):
     return a2b_base64(pem)
 
 
-def save_pem(contents, pem_marker):
+def save_pem(contents: bytes, pem_marker: Union[bytes, str]) -> bytes:
     """Saves a PEM file.
 
-    :param contents: the contents to encode in PEM format
+    :param bytes contents: the contents to encode in PEM format
     :param pem_marker: the marker of the PEM content, such as 'RSA PRIVATE KEY'
         when your file has '-----BEGIN RSA PRIVATE KEY-----' and
         '-----END RSA PRIVATE KEY-----' markers.
