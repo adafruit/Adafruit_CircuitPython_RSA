@@ -8,6 +8,11 @@
 import sys
 from struct import pack
 
+try:
+    from typing import Any, Literal, Tuple
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
@@ -31,40 +36,40 @@ else:
 INTEGER_TYPES = (int,)
 
 
-def write_to_stdout(data):
+def write_to_stdout(data: bytes) -> None:
     """Writes bytes to stdout
 
-    :type data: bytes
+    :param bytes data: Data to write
     """
     # On Py3 we must use the buffer interface to write bytes.
     sys.stdout.buffer.write(data)
 
 
-def is_bytes(obj):
+def is_bytes(obj: Any) -> bool:
     """
     Determines whether the given value is a byte string.
 
     :param obj:
         The value to test.
     :returns:
-        ``True`` if ``value`` is a byte string; ``False`` otherwise.
+        ``True`` if ``obj`` is a byte string; ``False`` otherwise.
     """
     return isinstance(obj, bytes)
 
 
-def is_integer(obj):
+def is_integer(obj: Any) -> bool:
     """
     Determines whether the given value is an integer.
 
     :param obj:
         The value to test.
     :returns:
-        ``True`` if ``value`` is an integer; ``False`` otherwise.
+        ``True`` if ``obj`` is an integer; ``False`` otherwise.
     """
     return isinstance(obj, INTEGER_TYPES)
 
 
-def byte(num):
+def byte(num: int) -> bytes:
     """
     Converts a number between 0 and 255 (both inclusive) to a base-256 (byte)
     representation.
@@ -72,7 +77,7 @@ def byte(num):
     Use it as a replacement for ``chr`` where you are expecting a byte
     because this will work on all current versions of Python::
 
-    :param num:
+    :param int num:
         An unsigned integer between 0 and 255 (both inclusive).
     :returns:
         A single byte.
@@ -80,7 +85,7 @@ def byte(num):
     return pack("B", num)
 
 
-def xor_bytes(bytes_1, bytes_2):
+def xor_bytes(bytes_1: bytes, bytes_2: bytes) -> bytes:
     """
     Returns the bitwise XOR result between two bytes objects, bytes_1 ^ bytes_2.
 
@@ -88,7 +93,7 @@ def xor_bytes(bytes_1, bytes_2):
     generate different results. If parameters have different length, extra
     length of the largest one is ignored.
 
-    :param bytes_1:
+    :param bytes bytes_1:
         First bytes object.
     :param bytes_2:
         Second bytes object.
@@ -98,18 +103,22 @@ def xor_bytes(bytes_1, bytes_2):
     return bytes(x ^ y for x, y in zip(bytes_1, bytes_2))
 
 
-def get_word_alignment(num, force_arch=64, _machine_word_size=MACHINE_WORD_SIZE):
+def get_word_alignment(
+    num: int,
+    force_arch: int = 64,
+    _machine_word_size: Literal[64, 32] = MACHINE_WORD_SIZE,
+) -> Tuple[int, int, int, str]:
     """
     Returns alignment details for the given number based on the platform
     Python is running on.
 
-    :param num:
-        Unsigned integral number.
-    :param force_arch:
+    :param int num:
+        Unsigned integer number.
+    :param int force_arch:
         If you don't want to use 64-bit unsigned chunks, set this to
         anything other than 64. 32-bit chunks will be preferred then.
         Default 64 will be used when on a 64-bit machine.
-    :param _machine_word_size:
+    :param int _machine_word_size:
         (Internal) The machine word size used for alignment.
     :returns:
         4-tuple::
