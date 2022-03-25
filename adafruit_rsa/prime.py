@@ -12,13 +12,18 @@ Roberto Tamassia, 2002.
 import adafruit_rsa.common
 import adafruit_rsa.randnum
 
+try:
+    from typing import Literal
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 __all__ = ["getprime", "are_relatively_prime"]
 
 
-def gcd(p, q):
+def gcd(p: int, q: int) -> int:
     """Returns the greatest common divisor of p and q
 
     >>> gcd(48, 180)
@@ -30,7 +35,7 @@ def gcd(p, q):
     return p
 
 
-def get_primality_testing_rounds(number):
+def get_primality_testing_rounds(number: int) -> Literal[3, 4, 7, 10]:
     """Returns minimum number of rounds for Miller-Rabing primality testing,
     based on number bitsize.
 
@@ -56,7 +61,7 @@ def get_primality_testing_rounds(number):
     return 10
 
 
-def miller_rabin_primality_testing(n, k):
+def miller_rabin_primality_testing(n: int, k: int) -> bool:
     """Calculates whether n is composite (which is always correct) or prime
     (which theoretically is incorrect with error probability 4**-k), by
     applying Miller-Rabin primality testing.
@@ -64,10 +69,8 @@ def miller_rabin_primality_testing(n, k):
     For reference and implementation example, see:
     https://en.wikipedia.org/wiki/Miller%E2%80%93Rabin_primality_test
 
-    :param n: Integer to be tested for primality.
-    :type n: int
-    :param k: Number of rounds (witnesses) of Miller-Rabin testing.
-    :type k: int
+    :param int n: Integer to be tested for primality.
+    :param int k: Number of rounds (witnesses) of Miller-Rabin testing.
     :return: False if the number is composite, True if it's probably prime.
     :rtype: bool
     """
@@ -109,7 +112,7 @@ def miller_rabin_primality_testing(n, k):
     return True
 
 
-def pow_mod(x, y, z):
+def pow_mod(x: int, y: int, z: int) -> int:
     "Calculate (x ** y) % z efficiently."
     number = 1
     while y:
@@ -120,7 +123,7 @@ def pow_mod(x, y, z):
     return number
 
 
-def is_prime(number):
+def is_prime(number: int) -> bool:
     """Returns True if the number is prime, and False otherwise.
 
     >>> is_prime(2)
@@ -146,7 +149,7 @@ def is_prime(number):
     return miller_rabin_primality_testing(number, k + 1)
 
 
-def getprime(nbits):
+def getprime(nbits: int) -> int:
     """Returns a prime number that can be stored in 'nbits' bits.
 
     >>> p = getprime(128)
@@ -174,7 +177,7 @@ def getprime(nbits):
             # Retry if not prime
 
 
-def are_relatively_prime(a, b):
+def are_relatively_prime(a: int, b: int) -> bool:
     """Returns True if a and b are relatively prime, and False if they
     are not.
 
