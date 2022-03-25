@@ -7,13 +7,22 @@
 
 # pylint: disable=invalid-name
 
+try:
+    from typing import Optional, Tuple, Sequence
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 
-def bit_length(int_type):
+def bit_length(int_type: int) -> int:
     """Return the number of bits necessary to represent an integer in binary,
-    excluding the sign and leading zeros"""
+    excluding the sign and leading zeros
+
+    :param int int_type: The integer to check
+    """
+
     length = 0
     while int_type:
         int_type >>= 1
@@ -24,7 +33,7 @@ def bit_length(int_type):
 class NotRelativePrimeError(ValueError):
     """Raises if provided a and b not relatively prime."""
 
-    def __init__(self, a, b, d, msg=None):
+    def __init__(self, a: int, b: int, d: int, msg: Optional[str] = None):
         super().__init__(
             msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d)
         )
@@ -33,7 +42,7 @@ class NotRelativePrimeError(ValueError):
         self.d = d
 
 
-def bit_size(num):
+def bit_size(num: int) -> int:
     """
     Number of bits needed to represent a integer excluding any prefix
     0 bits.
@@ -47,7 +56,7 @@ def bit_size(num):
         >>> bit_size(1025)
         11
 
-    :param num:
+    :param int num:
         Integer value. If num is 0, returns 0. Only the absolute value of the
         number is considered. Therefore, signed integers will be abs(num)
         before the number's bit length is determined.
@@ -63,7 +72,7 @@ def bit_size(num):
         ) from err
 
 
-def byte_size(number):
+def byte_size(number: int) -> int:
     """
     Returns the number of bytes required to hold a specific long number.
 
@@ -78,17 +87,15 @@ def byte_size(number):
         >>> byte_size(1 << 1024)
         129
 
-    :param number:
-        An unsigned integer
-    :returns:
-        The number of bytes required to hold a specific long number.
+    :param int number: An unsigned integer
+    :return: The number of bytes required to hold a specific long number.
     """
     if number == 0:
         return 1
     return ceil_div(bit_size(number), 8)
 
 
-def ceil_div(num, div):
+def ceil_div(num: int, div: int) -> int:
     """
     Returns the ceiling function of a division between `num` and `div`.
 
@@ -101,9 +108,8 @@ def ceil_div(num, div):
         >>> ceil_div(1, 4)
         1
 
-    :param num: Division's numerator, a number
-    :param div: Division's divisor, a number
-
+    :param int num: Division's numerator, a number
+    :param int div: Division's divisor, a number
     :return: Rounded up result of the division between the parameters.
     """
     quanta, mod = divmod(num, div)
@@ -112,7 +118,7 @@ def ceil_div(num, div):
     return quanta
 
 
-def extended_gcd(a, b):
+def extended_gcd(a: int, b: int) -> Tuple[int, int, int]:
     """Returns a tuple (r, i, j) such that r = gcd(a, b) = ia + jb"""
     # r = gcd(a,b) i = multiplicitive inverse of a mod b
     #      or      j = multiplicitive inverse of b mod a
@@ -136,7 +142,7 @@ def extended_gcd(a, b):
     return a, lx, ly  # Return only positive values
 
 
-def inverse(x, n):
+def inverse(x: int, n: int) -> int:
     """Returns the inverse of x % n under multiplication, a.k.a x^-1 (mod n)
 
     >>> inverse(7, 4)
@@ -153,13 +159,13 @@ def inverse(x, n):
     return inv
 
 
-def crt(a_values, modulo_values):
+def crt(a_values: Sequence[int], modulo_values: Sequence[int]) -> int:
     """Chinese Remainder Theorem.
 
     Calculates x such that x = a[i] (mod m[i]) for each i.
 
-    :param a_values: the a-values of the above equation
-    :param modulo_values: the m-values of the above equation
+    :param Sequence[int] a_values: the a-values of the above equation
+    :param Sequence[int] modulo_values: the m-values of the above equation
     :returns: x such that x = a[i] (mod m[i]) for each i
 
 
