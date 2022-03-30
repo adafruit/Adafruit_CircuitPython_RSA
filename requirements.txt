@@ -3,3 +3,4 @@
 # SPDX-License-Identifier: Unlicense
 
 Adafruit-Blinka>=7.0.0
+pyasn1
