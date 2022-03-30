@@ -41,7 +41,6 @@ try:
             """A method that reads a given number of bytes or chracters"""
             ...
 
-
 except ImportError:
     pass
 
