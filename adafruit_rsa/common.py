@@ -3,7 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Common functionality shared by several modules."""
+"""
+`adafruit_rsa.common`
+====================================================
+
+Common functionality shared by several modules.
+"""
 
 # pylint: disable=invalid-name
 

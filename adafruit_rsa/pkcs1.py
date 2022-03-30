@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Functions for PKCS#1 version 1.5 encryption and signing
+"""
+`adafruit_rsa.pkcs1`
+====================================================
+
+Functions for PKCS#1 version 1.5 encryption and signing
 
 This module implements certain functionality from PKCS#1 version 1.5. For a
 very clear example, read http://www.di-mgt.com.au/rsa_alg.html#pkcs1schemes
@@ -16,6 +20,7 @@ that are raised contain the Python traceback information, which can be used to
 deduce where in the process the failure occurred. DO NOT PASS SUCH INFORMATION
 to your users.
 """
+
 import os
 import adafruit_hashlib as hashlib
 from adafruit_rsa import common, transform, core

@@ -3,7 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Python compatibility wrappers."""
+"""
+`adafruit_rsa._compat`
+====================================================
+
+Python compatibility wrappers.
+"""
 
 import sys
 from struct import pack

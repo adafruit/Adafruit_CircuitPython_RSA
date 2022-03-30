@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Data transformation functions.
+"""
+`adafruit_rsa.transform`
+====================================================
+
+Data transformation functions.
 
 From bytes to a number, number to bytes, etc.
 """

@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Core mathematical operations.
+"""
+`adafruit_rsa.core`
+====================================================
+
+Core mathematical operations.
 
 This is the actual core RSA implementation, which is only defined
 mathematically on integers.

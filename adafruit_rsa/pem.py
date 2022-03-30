@@ -3,7 +3,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Functions that load and write PEM-encoded files."""
+"""
+`adafruit_rsa.pem`
+====================================================
+
+Functions that load and write PEM-encoded files.
+"""
+
 from adafruit_binascii import a2b_base64, b2a_base64
 
 # pylint: disable=redefined-builtin
