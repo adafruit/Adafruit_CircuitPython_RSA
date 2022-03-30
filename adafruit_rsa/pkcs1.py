@@ -335,7 +335,7 @@ def verify(
     :param PublicKey pub_key: the :py:class:`adafruit_rsaPublicKey` of the person
         signing the message.
     :raise VerificationError: when the signature doesn't match the message.
-    :returns: the name of the used hash.
+    :return: the name of the used hash.
 
     """
 
@@ -369,7 +369,7 @@ def find_signature_hash(signature: bytes, pub_key: PublicKey) -> str:
         :py:func:`adafruit_rsasign`.
     :param PublicKey pub_key: the :py:class:`adafruit_rsaPublicKey`
         of the person signing the message.
-    :returns: the name of the used hash.
+    :return: the name of the used hash.
     """
 
     keylength = common.byte_size(pub_key.n)
@@ -387,7 +387,7 @@ def yield_fixedblocks(
 
     :param TextIOWrapper infile: file to read and separate in blocks.
     :param int blocksize: block size in bytes.
-    :returns: a generator that yields the contents of each block
+    :return: a generator that yields the contents of each block
     """
 
     while True:

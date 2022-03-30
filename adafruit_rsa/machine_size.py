@@ -54,7 +54,7 @@ def get_word_alignment(
         Default 64 will be used when on a 64-bit machine.
     :param _machine_word_size:
         (Internal) The machine word size used for alignment.
-    :returns:
+    :return:
         4-tuple::
 
             (word_bits, word_bytes,

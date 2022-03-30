@@ -65,7 +65,7 @@ def bit_size(num: int) -> int:
         Integer value. If num is 0, returns 0. Only the absolute value of the
         number is considered. Therefore, signed integers will be abs(num)
         before the number's bit length is determined.
-    :returns:
+    :return:
         Returns the number of bits in the integer.
     """
 
@@ -171,7 +171,7 @@ def crt(a_values: Sequence[int], modulo_values: Sequence[int]) -> int:
 
     :param Sequence[int] a_values: the a-values of the above equation
     :param Sequence[int] modulo_values: the m-values of the above equation
-    :returns: x such that x = a[i] (mod m[i]) for each i
+    :return: x such that x = a[i] (mod m[i]) for each i
 
 
     >>> crt([2, 3], [3, 5])

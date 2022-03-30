@@ -81,14 +81,14 @@ class AbstractKey(object):
     def _save_pkcs1_pem(self) -> bytes:
         """Saves the key in PKCS#1 PEM format, implement in a subclass.
 
-        :returns: the PEM-encoded key.
+        :return: the PEM-encoded key.
         :rtype: bytes
         """
 
     def _save_pkcs1_der(self) -> bytes:
         """Saves the key in PKCS#1 DER format, implement in a subclass.
 
-        :returns: the DER-encoded key.
+        :return: the DER-encoded key.
         :rtype: bytes
         """
 
@@ -132,7 +132,7 @@ class AbstractKey(object):
         """Saves the key in PKCS#1 DER or PEM format.
 
         :param str format: the format to save; 'PEM' or 'DER'
-        :returns: the DER- or PEM-encoded key.
+        :return: the DER- or PEM-encoded key.
         :rtype: bytes
         """
 
@@ -261,7 +261,7 @@ class PublicKey(AbstractKey):
     def _save_pkcs1_der(self) -> bytes:
         """Saves the public key in PKCS#1 DER format.
 
-        :returns: the DER-encoded public key.
+        :return: the DER-encoded public key.
         :rtype: bytes
         """
         # pylint: disable=import-outside-toplevel
@@ -431,7 +431,7 @@ class PrivateKey(AbstractKey):
 
         :param int encrypted: the encrypted message
 
-        :returns: the decrypted message
+        :return: the decrypted message
         :rtype: int
         """
 
@@ -445,7 +445,7 @@ class PrivateKey(AbstractKey):
         """Encrypts the message using blinding to prevent side-channel attacks.
 
         :param int message: the message to encrypt
-        :returns: the encrypted message
+        :return: the encrypted message
         :rtype: int
         """
 
@@ -515,7 +515,7 @@ class PrivateKey(AbstractKey):
     def _save_pkcs1_der(self) -> bytes:
         """Saves the private key in PKCS#1 DER format.
 
-        :returns: the DER-encoded private key.
+        :return: the DER-encoded private key.
         :rtype: bytes
         """
         # pylint: disable=import-outside-toplevel
@@ -594,7 +594,7 @@ def find_p_q(
         *Introduced in Python-RSA 3.1*
 
     :param accurate: whether to enable accurate mode or not.
-    :returns: (p, q), where p > q
+    :return: (p, q), where p > q
 
     >>> (p, q) = find_p_q(128)
     >>> from adafruit_rsa.rsa import common
@@ -765,7 +765,7 @@ def newkeys(
     :param str log_level: Logger level, setting to DEBUG will log info about when
                         p and q are generating.
 
-    :returns: a tuple (:py:class:`adafruit_rsa.PublicKey`, :py:class:`adafruit_rsa.PrivateKey`)
+    :return: a tuple (:py:class:`adafruit_rsa.PublicKey`, :py:class:`adafruit_rsa.PrivateKey`)
 
     The ``poolsize`` parameter was added in *Python-RSA 3.1* and requires
     Python 2.6 or newer.

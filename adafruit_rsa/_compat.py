@@ -56,7 +56,7 @@ def is_bytes(obj: Any) -> bool:
 
     :param obj:
         The value to test.
-    :returns:
+    :return:
         ``True`` if ``obj`` is a byte string; ``False`` otherwise.
     """
     return isinstance(obj, bytes)
@@ -68,7 +68,7 @@ def is_integer(obj: Any) -> bool:
 
     :param obj:
         The value to test.
-    :returns:
+    :return:
         ``True`` if ``obj`` is an integer; ``False`` otherwise.
     """
     return isinstance(obj, INTEGER_TYPES)
@@ -83,7 +83,7 @@ def byte(num: int) -> bytes:
     because this will work on all current versions of Python::
 
     :param int num: An unsigned integer between 0 and 255 (both inclusive).
-    :returns: A single byte.
+    :return: A single byte.
     """
     return pack("B", num)
 
