@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""RSA key generation code.
+"""
+`adafruit_rsa.key`
+====================================================
+
+RSA key generation code.
 
 Create new keys with the newkeys() function. It will give you a PublicKey and a
 PrivateKey object.

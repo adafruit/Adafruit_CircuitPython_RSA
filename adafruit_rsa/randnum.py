@@ -3,7 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Functions for generating random numbers."""
+"""
+`adafruit_rsa.randnum`
+====================================================
+
+Functions for generating random numbers.
+"""
 
 # Source inspired by code by Yesudeep Mangalapilly <yesudeep@gmail.com>
 
