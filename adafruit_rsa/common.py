@@ -102,9 +102,9 @@ def byte_size(number: int) -> int:
 
 def ceil_div(num: int, div: int) -> int:
     """
-    Returns the ceiling function of a division between `num` and `div`.
+    Returns the ceiling function of a division between ``num`` and ``div``.
 
-    Usage::
+    Usage:
 
         >>> ceil_div(100, 7)
         15
