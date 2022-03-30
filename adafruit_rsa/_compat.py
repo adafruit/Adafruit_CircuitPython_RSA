@@ -82,10 +82,8 @@ def byte(num: int) -> bytes:
     Use it as a replacement for ``chr`` where you are expecting a byte
     because this will work on all current versions of Python::
 
-    :param int num:
-        An unsigned integer between 0 and 255 (both inclusive).
-    :returns:
-        A single byte.
+    :param int num: An unsigned integer between 0 and 255 (both inclusive).
+    :returns: A single byte.
     """
     return pack("B", num)
 
@@ -98,12 +96,9 @@ def xor_bytes(bytes_1: bytes, bytes_2: bytes) -> bytes:
     generate different results. If parameters have different length, extra
     length of the largest one is ignored.
 
-    :param bytes bytes_1:
-        First bytes object.
-    :param bytes_2:
-        Second bytes object.
-    :returns:
-        Bytes object, result of XOR operation.
+    :param bytes bytes_1: First bytes object.
+    :param bytes_2: Second bytes object.
+    :return: Bytes object, result of XOR operation.
     """
     return bytes(x ^ y for x, y in zip(bytes_1, bytes_2))
 
@@ -125,7 +120,7 @@ def get_word_alignment(
         Default 64 will be used when on a 64-bit machine.
     :param int _machine_word_size:
         (Internal) The machine word size used for alignment.
-    :returns:
+    :return:
         4-tuple::
 
             (word_bits, word_bytes,

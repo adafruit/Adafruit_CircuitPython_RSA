@@ -756,7 +756,7 @@ def newkeys(
     :param int nbits: the number of bits required to store ``n = p*q``.
     :param bool accurate: when True, ``n`` will have exactly the number of bits you
         asked for. However, this makes key generation much slower. When False,
-        `n`` may have slightly less bits.
+        ``n`` may have slightly less bits.
     :param int poolsize: the number of processes to use to generate the prime
         numbers.
     :param int exponent: the exponent for the key; only change this if you know

@@ -147,9 +147,12 @@ def int2bytes(
     Convert an unsigned integer to bytes (base-256 representation)::
     Does not preserve leading zeros if you don't specify a chunk size or
     fill size.
+
     .. NOTE:
+
         You must not specify both fill_size and chunk_size. Only one
         of them is allowed.
+
     :param int number:
         Integer value
     :param fill_size:
