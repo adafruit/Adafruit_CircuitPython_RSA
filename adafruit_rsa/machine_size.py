@@ -3,7 +3,12 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Detection of 32-bit and 64-bit machines and byte alignment."""
+"""
+`adafruit_rsa.machine_size`
+====================================================
+
+Detection of 32-bit and 64-bit machines and byte alignment.
+"""
 
 import sys
 

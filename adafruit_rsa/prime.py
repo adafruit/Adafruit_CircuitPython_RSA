@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Numerical functions related to primes.
+"""
+`adafruit_rsa.prime`
+====================================================
+
+Numerical functions related to primes.
 
 Implementation based on the book Algorithm Design by Michael T. Goodrich and
 Roberto Tamassia, 2002.
