@@ -23,6 +23,8 @@ This driver depends on:
 
 * `Adafruit CircuitPython <https://github.com/adafruit/circuitpython>`_
 * `Adafruit CircuitPython Logger Module <https://github.com/adafruit/Adafruit_CircuitPython_Logger>`_
+* `pyasn1 Library <https://github.com/etingof/pyasn1>`_ (some functionality)
+* CPython's ``rsa`` Library (some functionality)
 
 Please ensure all dependencies are available on the CircuitPython filesystem.
 This is easily achieved by downloading
