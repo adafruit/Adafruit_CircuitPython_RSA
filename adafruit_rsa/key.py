@@ -250,8 +250,11 @@ class PublicKey(AbstractKey):
 
         """
         # pylint: disable=import-outside-toplevel
-        from adafruit_rsa.tools.pyasn1.codec.der import decoder
-        from adafruit_rsa.asn1 import AsnPubKey
+        try:
+            from adafruit_rsa.tools.pyasn1.codec.der import decoder
+            from adafruit_rsa.asn1 import AsnPubKey
+        except ImportError as err:
+            raise ImportError("This functionality requires the pyasn1 library") from err
 
         (priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
         return cls(n=int(priv["modulus"]), e=int(priv["publicExponent"]))
@@ -263,7 +266,10 @@ class PublicKey(AbstractKey):
         :rtype: bytes
         """
         # pylint: disable=import-outside-toplevel
-        from pyasn1.codec.der import encoder
+        try:
+            from pyasn1.codec.der import encoder
+        except ImportError as err:
+            raise ImportError("This functionality requires the  library") from err
         from rsa.asn1 import AsnPubKey
 
         # Create the ASN object
@@ -328,9 +334,12 @@ class PublicKey(AbstractKey):
 
         """
         # pylint: disable=import-outside-toplevel
-        from adafruit_rsa.asn1 import OpenSSLPubKey
-        from pyasn1.codec.der import decoder
-        from pyasn1.type import univ
+        try:
+            from adafruit_rsa.asn1 import OpenSSLPubKey
+            from pyasn1.codec.der import decoder
+            from pyasn1.type import univ
+        except ImportError as err:
+            raise ImportError("This functionality requires the pyasn1 library") from err
 
         (keyinfo, _) = decoder.decode(keyfile, asn1Spec=OpenSSLPubKey())
 
@@ -477,9 +486,12 @@ class PrivateKey(AbstractKey):
 
         """
 
-        from adafruit_rsa.tools.pyasn1.codec.der import (  # pylint: disable=import-outside-toplevel
-            decoder,
-        )
+        try:
+            from adafruit_rsa.tools.pyasn1.codec.der import (  # pylint: disable=import-outside-toplevel
+                decoder,
+            )
+        except ImportError as err:
+            raise ImportError("This functionality requires the pyasn1 library") from err
 
         (priv, _) = decoder.decode(keyfile)
 
@@ -521,8 +533,11 @@ class PrivateKey(AbstractKey):
         :rtype: bytes
         """
         # pylint: disable=import-outside-toplevel
-        from pyasn1.type import univ, namedtype
-        from pyasn1.codec.der import encoder
+        try:
+            from pyasn1.type import univ, namedtype
+            from pyasn1.codec.der import encoder
+        except ImportError as err:
+            raise ImportError("This functionality requires the pyasn1 library") from err
 
         class AsnPrivKey(univ.Sequence):
             """Creates PKCS#1 DER Formatted AsnPrivKey"""

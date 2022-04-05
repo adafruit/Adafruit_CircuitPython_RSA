@@ -9,7 +9,10 @@ Not all ASN.1-handling code use these definitions, but when it does, they should
 """
 
 # pylint: disable=no-name-in-module, too-few-public-methods
-from pyasn1.type import univ, namedtype, tag
+try:
+    from pyasn1.type import univ, namedtype, tag
+except ImportError as err:
+    raise ImportError("Usage of asn1.py requires pyasn1 library") from err
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
