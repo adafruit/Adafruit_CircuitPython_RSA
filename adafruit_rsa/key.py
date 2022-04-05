@@ -270,7 +270,13 @@ class PublicKey(AbstractKey):
             from pyasn1.codec.der import encoder
         except ImportError as err:
             raise ImportError("This functionality requires the  library") from err
-        from rsa.asn1 import AsnPubKey
+        try:
+            from rsa.asn1 import AsnPubKey
+        except ImportError as err:
+            raise ImportError(
+                "This functionality requres the CPython rsa library, "
+                "not available in CircuitPython"
+            ) from err
 
         # Create the ASN object
         asn_key = AsnPubKey()
