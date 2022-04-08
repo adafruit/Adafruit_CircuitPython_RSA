@@ -1,7 +1,7 @@
 Introduction
 ============
 
-.. image:: https://readthedocs.org/projects/adafruit-circuitpython-rsa/badge/?version=latest
+.. image:: https://readthedocs.org/projects/rsa/badge/?version=latest
     :target: https://docs.circuitpython.org/projects/rsa/en/latest/
     :alt: Documentation Status
 
