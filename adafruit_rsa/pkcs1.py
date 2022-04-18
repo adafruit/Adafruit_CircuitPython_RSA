@@ -26,7 +26,7 @@ import adafruit_hashlib as hashlib
 from adafruit_rsa import common, transform, core
 
 try:
-    from typing import Optional, Iterator, Union
+    from typing import Optional, Iterator, Union, Literal
     from adafruit_rsa.key import PublicKey, PrivateKey
 
     try:
@@ -260,7 +260,9 @@ def decrypt(crypto: bytes, priv_key: PrivateKey) -> bytes:
 
 
 def sign_hash(
-    hash_value: Optional[bytes], priv_key: PrivateKey, hash_method: str
+    hash_value: Optional[bytes],
+    priv_key: PrivateKey,
+    hash_method: Literal["MD5", "SHA-1", "SHA-224", "SHA-256", "SHA-384", "SHA-512"],
 ) -> bytes:
     """Signs a precomputed hash with the private key.
 
