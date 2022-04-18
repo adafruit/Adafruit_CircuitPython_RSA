@@ -35,7 +35,7 @@ import adafruit_rsa.randnum
 import adafruit_rsa.core
 
 try:
-    from typing import Any, Tuple, Dict, Callable
+    from typing import Any, Tuple, Dict, Callable, Literal
 except ImportError:
     pass
 
@@ -93,7 +93,9 @@ class AbstractKey(object):
         """
 
     @classmethod
-    def load_pkcs1(cls, keyfile: bytes, format: str = "PEM") -> "AbstractKey":
+    def load_pkcs1(
+        cls, keyfile: bytes, format: Literal["PEM", "DER"] = "PEM"
+    ) -> "AbstractKey":
         """Loads a key in PKCS#1 DER or PEM format.
 
         :param bytes keyfile: contents of a DER- or PEM-encoded file that
