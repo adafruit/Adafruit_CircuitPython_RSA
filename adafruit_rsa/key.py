@@ -748,7 +748,7 @@ def newkeys(
     poolsize: int = 1,
     exponent: int = DEFAULT_EXPONENT,
     log_level: str = "INFO",
-):
+) -> Tuple["PublicKey", "PrivateKey"]:
     """Generates public and private keys, and returns them as (pub, priv).
 
     The public key is also known as the 'encryption key', and is a
