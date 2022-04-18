@@ -130,7 +130,7 @@ class AbstractKey(object):
                 "Unsupported format: %r, try one of %s" % (file_format, formats)
             ) from err
 
-    def save_pkcs1(self, format: str = "PEM") -> bytes:
+    def save_pkcs1(self, format: Literal["PEM", "DER"] = "PEM") -> bytes:
         """Saves the key in PKCS#1 DER or PEM format.
 
         :param str format: the format to save; 'PEM' or 'DER'
