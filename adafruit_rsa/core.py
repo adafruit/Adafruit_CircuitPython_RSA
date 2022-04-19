@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Core mathematical operations.
+"""
+`adafruit_rsa.core`
+====================================================
+
+Core mathematical operations.
 
 This is the actual core RSA implementation, which is only defined
 mathematically on integers.
@@ -12,12 +16,18 @@ mathematically on integers.
 # pylint: disable=invalid-name
 from adafruit_rsa._compat import is_integer
 
+try:
+    from typing import Any
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 
-def fast_pow(x, e, m):
+def fast_pow(x: int, e: int, m: int) -> int:
     """Performs fast modular exponentiation, saves RAM on small CPUs/micros.
+
     :param int x: Base
     :param int y: Exponent
     :param int e: Second exponent
@@ -35,7 +45,7 @@ def fast_pow(x, e, m):
     return Y
 
 
-def assert_int(var, name):
+def assert_int(var: Any, name: str) -> None:
     """Asserts provided variable is an integer."""
     if is_integer(var):
         return
@@ -43,7 +53,7 @@ def assert_int(var, name):
     raise TypeError("%s should be an integer, not %s" % (name, var.__class__))
 
 
-def encrypt_int(message, ekey, n):
+def encrypt_int(message: int, ekey: int, n: int) -> int:
     """Encrypts a message using encryption key 'ekey', working modulo n"""
 
     assert_int(message, "message")
@@ -61,7 +71,7 @@ def encrypt_int(message, ekey, n):
     return fast_pow(message, ekey, n)
 
 
-def decrypt_int(cyphertext, dkey, n):
+def decrypt_int(cyphertext: int, dkey: int, n: int) -> int:
     """Decrypts a cypher text using the decryption key 'dkey', working modulo n"""
 
     assert_int(cyphertext, "cyphertext")

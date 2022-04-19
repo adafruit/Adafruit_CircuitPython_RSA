@@ -3,9 +3,19 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Detection of 32-bit and 64-bit machines and byte alignment."""
+"""
+`adafruit_rsa.machine_size`
+====================================================
+
+Detection of 32-bit and 64-bit machines and byte alignment.
+"""
 
 import sys
+
+try:
+    from typing import Literal, Tuple
+except ImportError:
+    pass
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
@@ -27,12 +37,16 @@ else:
     MACHINE_WORD_SIZE = 64
 
 
-def get_word_alignment(num, force_arch=64, _machine_word_size=MACHINE_WORD_SIZE):
+def get_word_alignment(
+    num: int,
+    force_arch: int = 64,
+    _machine_word_size: Literal[64, 32] = MACHINE_WORD_SIZE,
+) -> Tuple[int, int, int, str]:
     """
     Returns alignment details for the given number based on the platform
     Python is running on.
 
-    :param num:
+    :param int num:
         Unsigned integral number.
     :param force_arch:
         If you don't want to use 64-bit unsigned chunks, set this to
@@ -40,7 +54,7 @@ def get_word_alignment(num, force_arch=64, _machine_word_size=MACHINE_WORD_SIZE)
         Default 64 will be used when on a 64-bit machine.
     :param _machine_word_size:
         (Internal) The machine word size used for alignment.
-    :returns:
+    :return:
         4-tuple::
 
             (word_bits, word_bytes,

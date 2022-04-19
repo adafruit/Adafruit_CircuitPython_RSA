@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""ASN.1 definitions.
+"""
+`adafruit_rsa.asn1`
+====================================================
+
+ASN.1 definitions.
 
 Not all ASN.1-handling code use these definitions, but when it does, they should be here.
 """

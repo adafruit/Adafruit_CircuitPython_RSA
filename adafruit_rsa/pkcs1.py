@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Functions for PKCS#1 version 1.5 encryption and signing
+"""
+`adafruit_rsa.pkcs1`
+====================================================
+
+Functions for PKCS#1 version 1.5 encryption and signing
 
 This module implements certain functionality from PKCS#1 version 1.5. For a
 very clear example, read http://www.di-mgt.com.au/rsa_alg.html#pkcs1schemes
@@ -16,9 +20,29 @@ that are raised contain the Python traceback information, which can be used to
 deduce where in the process the failure occurred. DO NOT PASS SUCH INFORMATION
 to your users.
 """
+
 import os
 import adafruit_hashlib as hashlib
 from adafruit_rsa import common, transform, core
+
+try:
+    from typing import Optional, Iterator, Union, Literal
+    from adafruit_rsa.key import PublicKey, PrivateKey
+
+    try:
+        from typing import Protocol
+    except ImportError:
+        from typing_extensions import Protocol
+
+    class _FileLikeObject(Protocol):
+        """A file like object that implements the :meth:`read` method"""
+
+        def read(self, blocksize: int) -> Union[bytes, str]:
+            """A method that reads a given number of bytes or chracters"""
+            ...
+
+except ImportError:
+    pass
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
@@ -55,10 +79,13 @@ class VerificationError(CryptoError):
     """Raised when verification fails."""
 
 
-def _pad_for_encryption(message, target_length):
+def _pad_for_encryption(message: bytes, target_length: int) -> bytes:
     r"""Pads the message for encryption, returning the padded message.
 
+    :param bytes message: The message
+    :param int target_length: The length of the padded message
     :return: 00 02 RANDOM_DATA 00 MESSAGE
+    :rtype: bytes
 
     >>> block = _pad_for_encryption(b'hello', 16)
     >>> len(block)
@@ -100,12 +127,15 @@ def _pad_for_encryption(message, target_length):
     return b"".join([b"\x00\x02", padding, b"\x00", message])
 
 
-def _pad_for_signing(message, target_length):
+def _pad_for_signing(message: bytes, target_length: int) -> bytes:
     r"""Pads the message for signing, returning the padded message.
 
     The padding is always a repetition of FF bytes.
 
+    :param bytes message: The message to pad
+    :param int target_length: The length to pad the message
     :return: 00 01 PADDING 00 MESSAGE
+    :rtype: bytes
 
     >>> block = _pad_for_signing(b'hello', 16)
     >>> len(block)
@@ -133,13 +163,13 @@ def _pad_for_signing(message, target_length):
     return b"".join([b"\x00\x01", padding_length * b"\xff", b"\x00", message])
 
 
-def encrypt(message, pub_key):
+def encrypt(message: bytes, pub_key: PublicKey) -> bytes:
     """Encrypts the given message using PKCS#1 v1.5
 
-    :param message: the message to encrypt. Must be a byte string no longer than
+    :param bytes message: the message to encrypt. Must be a byte string no longer than
         ``k-11`` bytes, where ``k`` is the number of bytes needed to encode
         the ``n`` component of the public key.
-    :param pub_key: the :py:class:`adafruit_rsaPublicKey` to encrypt with.
+    :param PublicKey pub_key: the :py:class:`adafruit_rsaPublicKey` to encrypt with.
     :raise OverflowError: when the message is too large to fit in the padded
         block.
 
@@ -164,15 +194,15 @@ def encrypt(message, pub_key):
     return block
 
 
-def decrypt(crypto, priv_key):
+def decrypt(crypto: bytes, priv_key: PrivateKey) -> bytes:
     """Decrypts the given message using PKCS#1 v1.5
 
     The decryption is considered 'failed' when the resulting cleartext doesn't
     start with the bytes 00 02, or when the 00 byte between the padding and
     the message cannot be found.
 
-    :param crypto: the crypto text as returned by :py:func:`adafruit_rsaencrypt`
-    :param priv_key: the :py:class:`adafruit_rsaPrivateKey` to decrypt with.
+    :param bytes crypto: the crypto text as returned by :py:func:`adafruit_rsaencrypt`
+    :param PrivateKey priv_key: the :py:class:`adafruit_rsaPrivateKey` to decrypt with.
     :raise DecryptionError: when the decryption fails. No details are given as
         to why the code thinks the decryption fails, as this would leak
         information about the private key.
@@ -229,15 +259,19 @@ def decrypt(crypto, priv_key):
     return cleartext[sep_idx + 1 :]
 
 
-def sign_hash(hash_value, priv_key, hash_method):
+def sign_hash(
+    hash_value: Optional[bytes],
+    priv_key: PrivateKey,
+    hash_method: Literal["MD5", "SHA-1", "SHA-224", "SHA-256", "SHA-384", "SHA-512"],
+) -> bytes:
     """Signs a precomputed hash with the private key.
 
     Hashes the message, then signs the hash with the given key. This is known
     as a "detached signature", because the message itself isn't altered.
 
-    :param hash_value: A precomputed hash to sign (ignores message). Should be set to
-        None if needing to hash and sign message.
-    :param priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign with
+    :param bytes hash_value: A precomputed hash to sign (ignores message). Should be
+        set to ``None`` if needing to hash and sign message.
+    :param PrivateKey priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign with
     :param hash_method: the hash method used on the message. Use 'MD5', 'SHA-1',
         'SHA-224', SHA-256', 'SHA-384' or 'SHA-512'.
     :return: a message signature block.
@@ -263,7 +297,9 @@ def sign_hash(hash_value, priv_key, hash_method):
     return block
 
 
-def sign(message, priv_key, hash_method):
+def sign(
+    message: Union[bytes, _FileLikeObject], priv_key: PrivateKey, hash_method: str
+) -> bytes:
     """Signs the message with the private key.
 
     Hashes the message, then signs the hash with the given key. This is known
@@ -272,7 +308,8 @@ def sign(message, priv_key, hash_method):
     :param message: the message to sign. Can be an 8-bit string or a file-like
         object. If ``message`` has a ``read()`` method, it is assumed to be a
         file-like object.
-    :param priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign with
+    :param PrivateKey priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign
+        with
     :param hash_method: the hash method used on the message. Use 'MD5', 'SHA-1',
         'SHA-224', SHA-256', 'SHA-384' or 'SHA-512'.
     :return: a message signature block.
@@ -285,7 +322,9 @@ def sign(message, priv_key, hash_method):
     return sign_hash(msg_hash, priv_key, hash_method)
 
 
-def verify(message, signature, pub_key):
+def verify(
+    message: Union[bytes, _FileLikeObject], signature: bytes, pub_key: PublicKey
+) -> str:
     """Verifies that the signature matches the message.
 
     The hash method is detected automatically from the signature.
@@ -293,10 +332,11 @@ def verify(message, signature, pub_key):
     :param message: the signed message. Can be an 8-bit string or a file-like
         object. If ``message`` has a ``read()`` method, it is assumed to be a
         file-like object.
-    :param signature: the signature block, as created with :py:func:`rsa.sign`.
-    :param pub_key: the :py:class:`adafruit_rsaPublicKey` of the person signing the message.
+    :param bytes signature: the signature block, as created with :py:func:`rsa.sign`.
+    :param PublicKey pub_key: the :py:class:`adafruit_rsaPublicKey` of the person
+        signing the message.
     :raise VerificationError: when the signature doesn't match the message.
-    :returns: the name of the used hash.
+    :return: the name of the used hash.
 
     """
 
@@ -320,15 +360,17 @@ def verify(message, signature, pub_key):
     return method_name
 
 
-def find_signature_hash(signature, pub_key):
+def find_signature_hash(signature: bytes, pub_key: PublicKey) -> str:
     """Returns the hash name detected from the signature.
 
     If you also want to verify the message, use :py:func:`adafruit_rsaverify()` instead.
     It also returns the name of the used hash.
 
-    :param signature: the signature block, as created with :py:func:`adafruit_rsasign`.
-    :param pub_key: the :py:class:`adafruit_rsaPublicKey` of the person signing the message.
-    :returns: the name of the used hash.
+    :param bytes signature: the signature block, as created with
+        :py:func:`adafruit_rsasign`.
+    :param PublicKey pub_key: the :py:class:`adafruit_rsaPublicKey`
+        of the person signing the message.
+    :return: the name of the used hash.
     """
 
     keylength = common.byte_size(pub_key.n)
@@ -339,12 +381,14 @@ def find_signature_hash(signature, pub_key):
     return _find_method_hash(clearsig)
 
 
-def yield_fixedblocks(infile, blocksize):
+def yield_fixedblocks(
+    infile: _FileLikeObject, blocksize: int
+) -> Iterator[Union[bytes, str]]:
     """Generator, yields each block of ``blocksize`` bytes in the input file.
 
-    :param infile: file to read and separate in blocks.
-    :param blocksize: block size in bytes.
-    :returns: a generator that yields the contents of each block
+    :param TextIOWrapper infile: file to read and separate in blocks.
+    :param int blocksize: block size in bytes.
+    :return: a generator that yields the contents of each block
     """
 
     while True:
@@ -360,7 +404,9 @@ def yield_fixedblocks(infile, blocksize):
             break
 
 
-def compute_hash(message, method_name):
+def compute_hash(
+    message: Union[bytes, str, _FileLikeObject], method_name: str
+) -> bytes:
     """Returns the message digest.
 
     :param message: the signed message. Can be an 8-bit string or a file-like
@@ -368,7 +414,6 @@ def compute_hash(message, method_name):
         file-like object.
     :param method_name: the hash method, must be a key of
         :py:const:`HASH_METHODS`.
-
     """
 
     if method_name not in HASH_METHODS:
@@ -388,10 +433,10 @@ def compute_hash(message, method_name):
     return hasher.digest()
 
 
-def _find_method_hash(clearsig):
+def _find_method_hash(clearsig: bytes) -> str:
     """Finds the hash method.
 
-    :param clearsig: full padded ASN1 and hash.
+    :param bytes clearsig: full padded ASN1 and hash.
     :return: the used hash method.
     :raise VerificationFailed: when the hash method cannot be found
     """

@@ -3,7 +3,11 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""RSA key generation code.
+"""
+`adafruit_rsa.key`
+====================================================
+
+RSA key generation code.
 
 Create new keys with the newkeys() function. It will give you a PublicKey and a
 PrivateKey object.
@@ -30,6 +34,11 @@ import adafruit_rsa.common
 import adafruit_rsa.randnum
 import adafruit_rsa.core
 
+try:
+    from typing import Any, Tuple, Dict, Callable, Literal
+except ImportError:
+    pass
+
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
@@ -45,58 +54,53 @@ class AbstractKey(object):
 
     __slots__ = ("n", "e")
 
-    def __init__(self, n, e):
+    def __init__(self, n: int, e: int) -> None:
         self.n = n
         self.e = e
 
     @classmethod
-    def _load_pkcs1_pem(cls, keyfile):
+    def _load_pkcs1_pem(cls, keyfile: bytes) -> "AbstractKey":
         """Loads a key in PKCS#1 PEM format, implement in a subclass.
 
-        :param keyfile: contents of a PEM-encoded file that contains
+        :param bytes keyfile: contents of a PEM-encoded file that contains
             the public key.
-        :type keyfile: bytes
-
         :return: the loaded key
         :rtype: AbstractKey
         """
 
     @classmethod
-    def _load_pkcs1_der(cls, keyfile):
+    def _load_pkcs1_der(cls, keyfile: bytes) -> "AbstractKey":
         """Loads a key in PKCS#1 PEM format, implement in a subclass.
 
-        :param keyfile: contents of a DER-encoded file that contains
+        :param bytes keyfile: contents of a DER-encoded file that contains
             the public key.
-        :type keyfile: bytes
-
         :return: the loaded key
         :rtype: AbstractKey
         """
 
-    def _save_pkcs1_pem(self):
+    def _save_pkcs1_pem(self) -> bytes:
         """Saves the key in PKCS#1 PEM format, implement in a subclass.
 
-        :returns: the PEM-encoded key.
+        :return: the PEM-encoded key.
         :rtype: bytes
         """
 
-    def _save_pkcs1_der(self):
+    def _save_pkcs1_der(self) -> bytes:
         """Saves the key in PKCS#1 DER format, implement in a subclass.
 
-        :returns: the DER-encoded key.
+        :return: the DER-encoded key.
         :rtype: bytes
         """
 
     @classmethod
-    def load_pkcs1(cls, keyfile, format="PEM"):
+    def load_pkcs1(
+        cls, keyfile: bytes, format: Literal["PEM", "DER"] = "PEM"
+    ) -> "AbstractKey":
         """Loads a key in PKCS#1 DER or PEM format.
 
-        :param keyfile: contents of a DER- or PEM-encoded file that contains
-            the key.
-        :type keyfile: bytes
-        :param format: the format of the file to load; 'PEM' or 'DER'
-        :type format: str
-
+        :param bytes keyfile: contents of a DER- or PEM-encoded file that
+            contains the key.
+        :param str format: the format of the file to load; 'PEM' or 'DER'
         :return: the loaded key
         :rtype: AbstractKey
         """
@@ -113,7 +117,9 @@ class AbstractKey(object):
         # return method(keyfile)
 
     @staticmethod
-    def _assert_format_exists(file_format, methods):
+    def _assert_format_exists(
+        file_format: str, methods: Dict[str, Callable]
+    ) -> Callable[[], bytes]:
         """Checks whether the given file format exists in 'methods'."""
 
         try:
@@ -124,12 +130,11 @@ class AbstractKey(object):
                 "Unsupported format: %r, try one of %s" % (file_format, formats)
             ) from err
 
-    def save_pkcs1(self, format="PEM"):
+    def save_pkcs1(self, format: Literal["PEM", "DER"] = "PEM") -> bytes:
         """Saves the key in PKCS#1 DER or PEM format.
 
-        :param format: the format to save; 'PEM' or 'DER'
-        :type format: str
-        :returns: the DER- or PEM-encoded key.
+        :param str format: the format to save; 'PEM' or 'DER'
+        :return: the DER- or PEM-encoded key.
         :rtype: bytes
         """
 
@@ -141,13 +146,11 @@ class AbstractKey(object):
         method = self._assert_format_exists(format, methods)
         return method()
 
-    def blind(self, message, r):
+    def blind(self, message: int, r: int) -> int:
         """Performs blinding on the message using random number 'r'.
 
-        :param message: the message, as integer, to blind.
-        :type message: int
-        :param r: the random number to blind with.
-        :type r: int
+        :param int message: the message, as integer, to blind.
+        :param int r: the random number to blind with.
         :return: the blinded message.
         :rtype: int
 
@@ -158,12 +161,13 @@ class AbstractKey(object):
 
         return (message * adafruit_rsa.core.fast_pow(r, self.e, self.n)) % self.n
 
-    def unblind(self, blinded, r):
+    def unblind(self, blinded: int, r: int) -> int:
         """Performs blinding on the message using random number 'r'.
 
-        :param blinded: the blinded message, as integer, to unblind.
-        :param r: the random number to unblind with.
+        :param int blinded: the blinded message, as integer, to unblind.
+        :param int r: the random number to unblind with.
         :return: the original message.
+        :rtype: int
 
         The blinding is such that message = unblind(decrypt(blind(encrypt(message))).
 
@@ -200,21 +204,21 @@ class PublicKey(AbstractKey):
 
     __slots__ = ("n", "e")
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> Any:
         return getattr(self, key)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "PublicKey(%i, %i)" % (self.n, self.e)
 
-    def __getstate__(self):
+    def __getstate__(self) -> Tuple[int, int]:
         """Returns the key as tuple for pickling."""
         return self.n, self.e
 
-    def __setstate__(self, state):
+    def __setstate__(self, state: Tuple[int, int]) -> None:
         """Sets the key from tuple."""
         self.n, self.e = state
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if other is None:
             return False
 
@@ -223,18 +227,18 @@ class PublicKey(AbstractKey):
 
         return self.n == other.n and self.e == other.e
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.n, self.e))
 
     @classmethod
-    def _load_pkcs1_der(cls, keyfile):
+    def _load_pkcs1_der(cls, keyfile: bytes) -> "PublicKey":
         """Loads a key in PKCS#1 DER format.
 
-        :param keyfile: contents of a DER-encoded file that contains the public
-            key.
+        :param bytes keyfile: contents of a DER-encoded file that contains the
+            public key.
         :return: a PublicKey object
 
         First let's construct a DER encoded key:
@@ -259,10 +263,10 @@ class PublicKey(AbstractKey):
         (priv, _) = decoder.decode(keyfile, asn1Spec=AsnPubKey())
         return cls(n=int(priv["modulus"]), e=int(priv["publicExponent"]))
 
-    def _save_pkcs1_der(self):
+    def _save_pkcs1_der(self) -> bytes:
         """Saves the public key in PKCS#1 DER format.
 
-        :returns: the DER-encoded public key.
+        :return: the DER-encoded public key.
         :rtype: bytes
         """
         # pylint: disable=import-outside-toplevel
@@ -286,21 +290,21 @@ class PublicKey(AbstractKey):
         return encoder.encode(asn_key)
 
     @classmethod
-    def _load_pkcs1_pem(cls, keyfile):
+    def _load_pkcs1_pem(cls, keyfile: bytes) -> "PublicKey":
         """Loads a PKCS#1 PEM-encoded public key file.
 
         The contents of the file before the "-----BEGIN RSA PUBLIC KEY-----" and
         after the "-----END RSA PUBLIC KEY-----" lines is ignored.
 
-        :param keyfile: contents of a PEM-encoded file that contains the public
-            key.
+        :param bytes keyfile: contents of a PEM-encoded file that contains the
+            public key.
         :return: a PublicKey object
         """
 
         der = adafruit_rsa.pem.load_pem(keyfile, "RSA PUBLIC KEY")
         return cls._load_pkcs1_der(der)
 
-    def _save_pkcs1_pem(self):
+    def _save_pkcs1_pem(self) -> bytes:
         """Saves a PKCS#1 PEM-encoded public key file.
 
         :return: contents of a PEM-encoded file that contains the public key.
@@ -311,7 +315,7 @@ class PublicKey(AbstractKey):
         return adafruit_rsa.pem.save_pem(der, "RSA PUBLIC KEY")
 
     @classmethod
-    def load_pkcs1_openssl_pem(cls, keyfile):
+    def load_pkcs1_openssl_pem(cls, keyfile: bytes) -> "PublicKey":
         """Loads a PKCS#1.5 PEM-encoded public key file from OpenSSL.
 
         These files can be recognised in that they start with BEGIN PUBLIC KEY
@@ -320,8 +324,8 @@ class PublicKey(AbstractKey):
         The contents of the file before the "-----BEGIN PUBLIC KEY-----" and
         after the "-----END PUBLIC KEY-----" lines is ignored.
 
-        :param keyfile: contents of a PEM-encoded file that contains the public
-            key, from OpenSSL.
+        :param bytes keyfile: contents of a PEM-encoded file that contains the
+            public key, from OpenSSL.
         :type keyfile: bytes
         :return: a PublicKey object
         """
@@ -330,14 +334,12 @@ class PublicKey(AbstractKey):
         return cls.load_pkcs1_openssl_der(der)
 
     @classmethod
-    def load_pkcs1_openssl_der(cls, keyfile):
+    def load_pkcs1_openssl_der(cls, keyfile: bytes) -> "PublicKey":
         """Loads a PKCS#1 DER-encoded public key file from OpenSSL.
 
-        :param keyfile: contents of a DER-encoded file that contains the public
-            key, from OpenSSL.
+        :param bytes keyfile: contents of a DER-encoded file that contains the
+            public key, from OpenSSL.
         :return: a PublicKey object
-        :rtype: bytes
-
         """
         # pylint: disable=import-outside-toplevel
         try:
@@ -382,7 +384,7 @@ class PrivateKey(AbstractKey):
     __slots__ = ("n", "e", "d", "p", "q", "exp1", "exp2", "coef")
 
     # pylint: disable=too-many-arguments
-    def __init__(self, n, e, d, p, q):
+    def __init__(self, n: int, e: int, d: int, p: int, q: int) -> None:
         AbstractKey.__init__(self, n, e)
         self.d = d
         self.p = p
@@ -393,10 +395,10 @@ class PrivateKey(AbstractKey):
         self.exp2 = int(d % (q - 1))
         self.coef = adafruit_rsa.common.inverse(q, p)
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> Any:
         return getattr(self, key)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "PrivateKey(%i, %i, %i, %i, %i)" % (
             self.n,
             self.e,
@@ -405,15 +407,17 @@ class PrivateKey(AbstractKey):
             self.q,
         )
 
-    def __getstate__(self):
+    def __getstate__(self) -> Tuple[int, int, int, int, int, int, int, int]:
         """Returns the key as tuple for pickling."""
         return self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef
 
-    def __setstate__(self, state):
+    def __setstate__(
+        self, state: Tuple[int, int, int, int, int, int, int, int]
+    ) -> None:
         """Sets the key from tuple."""
         self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef = state
 
-    def __eq__(self, other):
+    def __eq__(self, other: Any) -> bool:
         if other is None:
             return False
 
@@ -431,21 +435,20 @@ class PrivateKey(AbstractKey):
             and self.coef == other.coef
         )
 
-    def __ne__(self, other):
+    def __ne__(self, other: Any) -> bool:
         return not self == other
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(
             (self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef)
         )
 
-    def blinded_decrypt(self, encrypted):
+    def blinded_decrypt(self, encrypted: int) -> int:
         """Decrypts the message using blinding to prevent side-channel attacks.
 
-        :param encrypted: the encrypted message
-        :type encrypted: int
+        :param int encrypted: the encrypted message
 
-        :returns: the decrypted message
+        :return: the decrypted message
         :rtype: int
         """
 
@@ -455,13 +458,11 @@ class PrivateKey(AbstractKey):
 
         return self.unblind(decrypted, blind_r)
 
-    def blinded_encrypt(self, message):
+    def blinded_encrypt(self, message: int) -> int:
         """Encrypts the message using blinding to prevent side-channel attacks.
 
-        :param message: the message to encrypt
-        :type message: int
-
-        :returns: the encrypted message
+        :param int message: the message to encrypt
+        :return: the encrypted message
         :rtype: int
         """
 
@@ -471,12 +472,11 @@ class PrivateKey(AbstractKey):
         return self.unblind(encrypted, blind_r)
 
     @classmethod
-    def _load_pkcs1_der(cls, keyfile):
+    def _load_pkcs1_der(cls, keyfile: bytes) -> "PrivateKey":
         """Loads a key in PKCS#1 DER format.
 
-        :param keyfile: contents of a DER-encoded file that contains the private
-            key.
-        :type keyfile: bytes
+        :param bytes keyfile: contents of a DER-encoded file that contains the
+            private key.
         :return: a PrivateKey object
 
         First let's construct a DER encoded key:
@@ -532,10 +532,10 @@ class PrivateKey(AbstractKey):
 
         return key
 
-    def _save_pkcs1_der(self):
+    def _save_pkcs1_der(self) -> bytes:
         """Saves the private key in PKCS#1 DER format.
 
-        :returns: the DER-encoded private key.
+        :return: the DER-encoded private key.
         :rtype: bytes
         """
         # pylint: disable=import-outside-toplevel
@@ -575,22 +575,21 @@ class PrivateKey(AbstractKey):
         return encoder.encode(asn_key)
 
     @classmethod
-    def _load_pkcs1_pem(cls, keyfile):
+    def _load_pkcs1_pem(cls, keyfile: bytes) -> "PrivateKey":
         """Loads a PKCS#1 PEM-encoded private key file.
 
         The contents of the file before the "-----BEGIN RSA PRIVATE KEY-----" and
         after the "-----END RSA PRIVATE KEY-----" lines is ignored.
 
-        :param keyfile: contents of a PEM-encoded file that contains the private
-            key.
-        :type keyfile: bytes
+        :param bytes keyfile: contents of a PEM-encoded file that contains the
+            private key.
         :return: a PrivateKey object
         """
 
         der = adafruit_rsa.pem.load_pem(keyfile, b"RSA PRIVATE KEY")
         return cls._load_pkcs1_der(der)
 
-    def _save_pkcs1_pem(self):
+    def _save_pkcs1_pem(self) -> bytes:
         """Saves a PKCS#1 PEM-encoded private key file.
 
         :return: contents of a PEM-encoded file that contains the private key.
@@ -601,7 +600,11 @@ class PrivateKey(AbstractKey):
         return adafruit_rsa.pem.save_pem(der, b"RSA PRIVATE KEY")
 
 
-def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
+def find_p_q(
+    nbits: int,
+    getprime_func: Callable[[int], int] = adafruit_rsa.prime.getprime,
+    accurate: bool = True,
+) -> Tuple[int, int]:
     """Returns a tuple of two different primes of nbits bits each.
 
     The resulting p * q has exacty 2 * nbits bits, and the returned p and q
@@ -614,7 +617,7 @@ def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
         *Introduced in Python-RSA 3.1*
 
     :param accurate: whether to enable accurate mode or not.
-    :returns: (p, q), where p > q
+    :return: (p, q), where p > q
 
     >>> (p, q) = find_p_q(128)
     >>> from adafruit_rsa.rsa import common
@@ -646,7 +649,7 @@ def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
     log.debug("find_p_q(%i): Finding q", nbits)
     q = getprime_func(qbits)
 
-    def is_acceptable(p, q):
+    def is_acceptable(p: int, q: int) -> bool:
         """Returns True iff p and q are acceptable:
 
         - p and q differ
@@ -679,17 +682,15 @@ def find_p_q(nbits, getprime_func=adafruit_rsa.prime.getprime, accurate=True):
     return max(p, q), min(p, q)
 
 
-def calculate_keys_custom_exponent(p, q, exponent):
+def calculate_keys_custom_exponent(p: int, q: int, exponent: int) -> Tuple[int, int]:
     """Calculates an encryption and a decryption key given p, q and an exponent,
     and returns them as a tuple (e, d)
 
-    :param p: the first large prime
-    :param q: the second large prime
-    :param exponent: the exponent for the key; only change this if you know
-        what you're doing, as the exponent influences how difficult your
-        private key can be cracked. A very common choice for e is 65537.
-    :type exponent: int
-
+    :param int p: the first large prime
+    :param int q: the second large prime
+    :param int exponent: the exponent for the key; only change this if you
+        know what you're doing, as the exponent influences how difficult
+        your private key can be cracked. A very common choice for e is 65537.
     """
 
     phi_n = (p - 1) * (q - 1)
@@ -714,12 +715,12 @@ def calculate_keys_custom_exponent(p, q, exponent):
     return exponent, d
 
 
-def calculate_keys(p, q):
+def calculate_keys(p: int, q: int) -> Tuple[int, int]:
     """Calculates an encryption and a decryption key given p and q, and
     returns them as a tuple (e, d)
 
-    :param p: the first large prime
-    :param q: the second large prime
+    :param int p: the first large prime
+    :param int q: the second large prime
 
     :return: tuple (e, d) with the encryption and decryption exponents.
     """
@@ -727,19 +728,26 @@ def calculate_keys(p, q):
     return calculate_keys_custom_exponent(p, q, DEFAULT_EXPONENT)
 
 
-def gen_keys(nbits, getprime_func, accurate=True, exponent=DEFAULT_EXPONENT):
+def gen_keys(
+    nbits: int,
+    getprime_func: Callable[[int], int],
+    accurate: bool = True,
+    exponent: int = DEFAULT_EXPONENT,
+) -> Tuple[int, int, int, int]:
     """Generate RSA keys of nbits bits. Returns (p, q, e, d).
 
     Note: this can take a long time, depending on the key size.
 
-    :param nbits: the total number of bits in ``p`` and ``q``. Both ``p`` and
+    :param int nbits: the total number of bits in ``p`` and ``q``. Both ``p`` and
         ``q`` will use ``nbits/2`` bits.
-    :param getprime_func: either :py:func:`adafruit_rsa.rsa.prime.getprime` or a function
+    :param Callable getprime_func: either :py:func:`adafruit_rsa.rsa.prime.getprime` or a function
         with similar signature.
-    :param exponent: the exponent for the key; only change this if you know
+    :param bool accurate: when True, ``n`` will have exactly the number of bits you
+        asked for. However, this makes key generation much slower. When False,
+        `n`` may have slightly less bits.
+    :param int exponent: the exponent for the key; only change this if you know
         what you're doing, as the exponent influences how difficult your
         private key can be cracked. A very common choice for e is 65537.
-    :type exponent: int
     """
 
     # Regenerate p and q values, until calculate_keys doesn't raise a
@@ -756,28 +764,31 @@ def gen_keys(nbits, getprime_func, accurate=True, exponent=DEFAULT_EXPONENT):
 
 
 def newkeys(
-    nbits, accurate=True, poolsize=1, exponent=DEFAULT_EXPONENT, log_level="INFO"
-):
+    nbits: int,
+    accurate: bool = True,
+    poolsize: int = 1,
+    exponent: int = DEFAULT_EXPONENT,
+    log_level: str = "INFO",
+) -> Tuple["PublicKey", "PrivateKey"]:
     """Generates public and private keys, and returns them as (pub, priv).
 
     The public key is also known as the 'encryption key', and is a
     :py:class:`adafruit_rsa.rsa.PublicKey` object. The private key is also known as the
     'decryption key' and is a :py:class:`adafruit_rsa.rsa.PrivateKey` object.
 
-    :param nbits: the number of bits required to store ``n = p*q``.
-    :param accurate: when True, ``n`` will have exactly the number of bits you
+    :param int nbits: the number of bits required to store ``n = p*q``.
+    :param bool accurate: when True, ``n`` will have exactly the number of bits you
         asked for. However, this makes key generation much slower. When False,
-        `n`` may have slightly less bits.
-    :param poolsize: the number of processes to use to generate the prime
+        ``n`` may have slightly less bits.
+    :param int poolsize: the number of processes to use to generate the prime
         numbers.
-    :param exponent: the exponent for the key; only change this if you know
+    :param int exponent: the exponent for the key; only change this if you know
         what you're doing, as the exponent influences how difficult your
         private key can be cracked. A very common choice for e is 65537.
-    :type exponent: int
-    :param log_level: Logger level, setting to DEBUG will log info about when
+    :param str log_level: Logger level, setting to DEBUG will log info about when
                         p and q are generating.
 
-    :returns: a tuple (:py:class:`adafruit_rsa.PublicKey`, :py:class:`adafruit_rsa.PrivateKey`)
+    :return: a tuple (:py:class:`adafruit_rsa.PublicKey`, :py:class:`adafruit_rsa.PrivateKey`)
 
     The ``poolsize`` parameter was added in *Python-RSA 3.1* and requires
     Python 2.6 or newer.
