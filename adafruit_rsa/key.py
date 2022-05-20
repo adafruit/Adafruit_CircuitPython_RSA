@@ -35,7 +35,12 @@ import adafruit_rsa.randnum
 import adafruit_rsa.core
 
 try:
-    from typing import Any, Tuple, Dict, Callable, Literal
+    from typing import Any, Tuple, Dict, Callable
+
+    try:
+        from typing import Literal
+    except ImportError:
+        from typing_extensions import Literal
 except ImportError:
     pass
 

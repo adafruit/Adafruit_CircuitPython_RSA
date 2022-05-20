@@ -17,7 +17,10 @@ import adafruit_rsa.common
 import adafruit_rsa.randnum
 
 try:
-    from typing import Literal
+    try:
+        from typing import Literal
+    except ImportError:
+        from typing_extensions import Literal
 except ImportError:
     pass
 

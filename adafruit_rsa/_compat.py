@@ -14,9 +14,15 @@ import sys
 from struct import pack
 
 try:
-    from typing import Any, Literal, Tuple
+    from typing import Any, Tuple
+
+    try:
+        from typing import Literal
+    except ImportError:
+        from typing_extensions import Literal
 except ImportError:
     pass
+
 
 __version__ = "0.0.0-auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"

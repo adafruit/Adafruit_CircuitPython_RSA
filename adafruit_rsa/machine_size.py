@@ -13,7 +13,12 @@ Detection of 32-bit and 64-bit machines and byte alignment.
 import sys
 
 try:
-    from typing import Literal, Tuple
+    from typing import Tuple
+
+    try:
+        from typing import Literal
+    except ImportError:
+        from typing_extensions import Literal
 except ImportError:
     pass
 
