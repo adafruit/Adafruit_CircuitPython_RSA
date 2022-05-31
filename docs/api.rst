@@ -12,7 +12,10 @@ Adafruit CircuitPython RSA API
    :members:
 
 .. automodule:: adafruit_rsa.asn1
-   :members:
+
+   .. autoclass:: PubKeyHeader
+   .. autoclass:: OpenSSLPubKey
+   .. autoclass:: AsnPubKey
 
 .. automodule:: adafruit_rsa.common
    :members:
