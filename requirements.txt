@@ -3,4 +3,5 @@
 # SPDX-License-Identifier: Unlicense
 
 Adafruit-Blinka>=7.0.0
+adafruit-circuitpython-logging>=4.0.0
 pyasn1
