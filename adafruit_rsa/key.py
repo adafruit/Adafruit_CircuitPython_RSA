@@ -49,6 +49,7 @@ __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
 # pylint: disable=invalid-name, useless-object-inheritance, redefined-builtin, no-name-in-module, too-few-public-methods
 log = logging.getLogger(__name__)
+log.addHandler(logging.StreamHandler())
 log.setLevel(logging.INFO)
 
 DEFAULT_EXPONENT = 65537
