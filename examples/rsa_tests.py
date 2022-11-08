@@ -93,11 +93,10 @@ all_tests = [
 
 # Run adafruit_rsa tests
 start_time = time.monotonic()
-# pylint: disable=consider-using-enumerate
-for test_num, test_name in enumerate(all_tests, start=0):
+for test_name in all_tests:
     # for i in range(0, len(all_tests)):
     print("Testing: {}".format(test_name))
-    all_tests[test_num]()
+    test_name()
     print("OK!")
 print(
     "Ran {} tests in {} seconds".format(len(all_tests), time.monotonic() - start_time)

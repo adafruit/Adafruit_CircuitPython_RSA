@@ -58,8 +58,6 @@ DEFAULT_EXPONENT = 65537
 class AbstractKey(object):
     """Abstract superclass for private and public keys."""
 
-    __slots__ = ("n", "e")
-
     def __init__(self, n: int, e: int) -> None:
         self.n = n
         self.e = e
