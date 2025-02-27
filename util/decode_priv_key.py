@@ -8,7 +8,7 @@
 ===================================================================
 
 Generates RSA keys and decodes them using python-rsa
-for use with a CircuitPython secrets file.
+for use with a CircuitPython settings.toml file.
 
 This script is designed to run on a computer,
 NOT a CircuitPython device.
@@ -36,5 +36,5 @@ except:  # pylint: disable=bare-except
     print("No file named rsa_private.pem found in directory.")
 pk = rsa.PrivateKey.load_pkcs1(private_key)
 
-print("Copy and paste this into your secrets.py file:\n")
-print('"private_key": ' + str(pk)[10:] + ",")
+print("Copy and paste this into your settings.toml file:\n")
+print(f'private_key="{str(pk)[10:]}"')
