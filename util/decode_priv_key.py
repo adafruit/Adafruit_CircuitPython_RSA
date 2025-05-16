@@ -17,7 +17,9 @@ Requires Python-RSA (https://github.com/sybrenstuvel/python-rsa)
 
 * Author(s): Google Inc., Brent Rubell
 """
+
 import subprocess
+
 import rsa
 
 # Generate private and public RSA keys
@@ -32,7 +34,7 @@ with subprocess.Popen(
 try:
     with open("rsa_private.pem", "rb") as file:
         private_key = file.read()
-except:  # pylint: disable=bare-except
+except:
     print("No file named rsa_private.pem found in directory.")
 pk = rsa.PrivateKey.load_pkcs1(private_key)
 

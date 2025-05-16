@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -15,10 +14,11 @@ From bytes to a number, number to bytes, etc.
 # from __future__ import absolute_import
 
 from struct import pack
+
 import adafruit_binascii as binascii
 
-from adafruit_rsa._compat import byte, is_integer
 from adafruit_rsa import common, machine_size
+from adafruit_rsa._compat import byte, is_integer
 
 try:
     from typing import Optional
@@ -75,9 +75,7 @@ def _int2bytes(number: int, block_size: Optional[int] = None) -> bytes:
 
     # Type checking
     if not is_integer(number):
-        raise TypeError(
-            "You must pass an integer for 'number', not %s" % number.__class__
-        )
+        raise TypeError("You must pass an integer for 'number', not %s" % number.__class__)
 
     if number < 0:
         raise ValueError("Negative numbers cannot be used: %i" % number)
@@ -94,8 +92,7 @@ def _int2bytes(number: int, block_size: Optional[int] = None) -> bytes:
     if block_size and block_size > 0:
         if needed_bytes > block_size:
             raise OverflowError(
-                "Needed %i bytes for number, but block size "
-                "is %i" % (needed_bytes, block_size)
+                "Needed %i bytes for number, but block size " "is %i" % (needed_bytes, block_size)
             )
 
     # Convert the number to bytes.
@@ -213,5 +210,5 @@ def int2bytes(
         remainder = length % chunk_size
         if remainder:
             padding_size = chunk_size - remainder
-            raw_bytes = "% {}s".format(length + padding_size).encode() % raw_bytes
+            raw_bytes = f"% {length + padding_size}s".encode() % raw_bytes
     return raw_bytes

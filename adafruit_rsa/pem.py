@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -12,11 +11,10 @@ Functions that load and write PEM-encoded files.
 
 from adafruit_binascii import a2b_base64, b2a_base64
 
-# pylint: disable=redefined-builtin
 from adafruit_rsa._compat import is_bytes
 
 try:
-    from typing import Union, Tuple
+    from typing import Tuple, Union
 except ImportError:
     pass
 

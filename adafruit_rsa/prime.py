@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -12,7 +11,7 @@ Numerical functions related to primes.
 Implementation based on the book Algorithm Design by Michael T. Goodrich and
 Roberto Tamassia, 2002.
 """
-# pylint: disable=invalid-name
+
 import adafruit_rsa.common
 import adafruit_rsa.randnum
 
@@ -102,7 +101,7 @@ def miller_rabin_primality_testing(n: int, k: int) -> bool:
 
         x = adafruit_rsa.core.fast_pow(a, d, n)
 
-        if x in (1, n - 1):
+        if x in {1, n - 1}:
             continue
 
         for _ in range(r - 1):

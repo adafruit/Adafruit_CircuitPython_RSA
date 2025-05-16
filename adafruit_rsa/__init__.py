@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -15,17 +14,17 @@ prevent repetitions, or other common security improvements. Use with care.
 
 """
 
-from adafruit_rsa.key import newkeys, PrivateKey, PublicKey
+from adafruit_rsa.key import PrivateKey, PublicKey, newkeys
 from adafruit_rsa.pkcs1 import (
-    encrypt,
-    decrypt,
-    sign,
-    verify,
     DecryptionError,
     VerificationError,
-    find_signature_hash,
-    sign_hash,
     compute_hash,
+    decrypt,
+    encrypt,
+    find_signature_hash,
+    sign,
+    sign_hash,
+    verify,
 )
 
 __author__ = "Sybren Stuvel, Barry Mead and Yesudeep Mangalapilly"

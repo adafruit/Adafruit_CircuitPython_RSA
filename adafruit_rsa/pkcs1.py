@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -22,12 +21,15 @@ to your users.
 """
 
 import os
+
 import adafruit_hashlib as hashlib
-from adafruit_rsa import common, transform, core
+
+from adafruit_rsa import common, core, transform
 
 try:
-    from typing import Optional, Iterator, Union
-    from adafruit_rsa.key import PublicKey, PrivateKey
+    from typing import Iterator, Optional, Union
+
+    from adafruit_rsa.key import PrivateKey, PublicKey
 
     try:
         from typing import Protocol
@@ -301,9 +303,7 @@ def sign_hash(
     return block
 
 
-def sign(
-    message: Union[bytes, _FileLikeObject], priv_key: PrivateKey, hash_method: str
-) -> bytes:
+def sign(message: Union[bytes, _FileLikeObject], priv_key: PrivateKey, hash_method: str) -> bytes:
     """Signs the message with the private key.
 
     Hashes the message, then signs the hash with the given key. This is known
@@ -326,9 +326,7 @@ def sign(
     return sign_hash(msg_hash, priv_key, hash_method)
 
 
-def verify(
-    message: Union[bytes, _FileLikeObject], signature: bytes, pub_key: PublicKey
-) -> str:
+def verify(message: Union[bytes, _FileLikeObject], signature: bytes, pub_key: PublicKey) -> str:
     """Verifies that the signature matches the message.
 
     The hash method is detected automatically from the signature.
@@ -385,9 +383,7 @@ def find_signature_hash(signature: bytes, pub_key: PublicKey) -> str:
     return _find_method_hash(clearsig)
 
 
-def yield_fixedblocks(
-    infile: _FileLikeObject, blocksize: int
-) -> Iterator[Union[bytes, str]]:
+def yield_fixedblocks(infile: _FileLikeObject, blocksize: int) -> Iterator[Union[bytes, str]]:
     """Generator, yields each block of ``blocksize`` bytes in the input file.
 
     :param TextIOWrapper infile: file to read and separate in blocks.
@@ -408,9 +404,7 @@ def yield_fixedblocks(
             break
 
 
-def compute_hash(
-    message: Union[bytes, str, _FileLikeObject], method_name: str
-) -> bytes:
+def compute_hash(message: Union[bytes, str, _FileLikeObject], method_name: str) -> bytes:
     """Returns the message digest.
 
     :param message: the signed message. Can be an 8-bit string or a file-like
@@ -445,7 +439,7 @@ def _find_method_hash(clearsig: bytes) -> str:
     :raise VerificationFailed: when the hash method cannot be found
     """
 
-    for (hashname, asn1code) in HASH_ASN1.items():
+    for hashname, asn1code in HASH_ASN1.items():
         if asn1code in clearsig:
             return hashname
 

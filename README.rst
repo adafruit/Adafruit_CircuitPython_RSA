@@ -13,9 +13,9 @@ Introduction
     :target: https://github.com/adafruit/Adafruit_CircuitPython_RSA/actions/
     :alt: Build Status
 
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://github.com/psf/black
-    :alt: Code Style: Black
+.. image:: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json
+    :target: https://github.com/astral-sh/ruff
+    :alt: Code Style: Ruff
 
 RSA implementation based on `Sybren A. Stüvel's python-rsa <https://github.com/sybrenstuvel/python-rsa>`_ pure-python
 RSA implementation.
