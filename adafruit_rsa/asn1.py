@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -12,9 +11,8 @@ ASN.1 definitions.
 Not all ASN.1-handling code use these definitions, but when it does, they should be here.
 """
 
-# pylint: disable=no-name-in-module, too-few-public-methods
 try:
-    from pyasn1.type import univ, namedtype, tag
+    from pyasn1.type import namedtype, tag, univ
 except ImportError as err:
     raise ImportError("Usage of asn1.py requires pyasn1 library") from err
 
@@ -39,9 +37,7 @@ class OpenSSLPubKey(univ.Sequence):
         # This little hack (the implicit tag) allows us to get a Bit String as Octet String
         namedtype.NamedType(
             "key",
-            univ.OctetString().subtype(
-                implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3)
-            ),
+            univ.OctetString().subtype(implicitTag=tag.Tag(tagClass=0, tagFormat=0, tagId=3)),
         ),
     )
 

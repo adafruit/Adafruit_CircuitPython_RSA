@@ -21,6 +21,4 @@ signature = adafruit_rsa.sign(message, private_key, hash_method)
 
 # Verify Message Signature
 if adafruit_rsa.verify(message, signature, public_key) != hash_method:
-    raise ValueError(
-        "Verification failed - signature does not match secret message sent!"
-    )
+    raise ValueError("Verification failed - signature does not match secret message sent!")

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -10,10 +9,8 @@
 Common functionality shared by several modules.
 """
 
-# pylint: disable=invalid-name
-
 try:
-    from typing import Optional, Tuple, Sequence
+    from typing import Optional, Sequence, Tuple
 except ImportError:
     pass
 
@@ -39,9 +36,7 @@ class NotRelativePrimeError(ValueError):
     """Raises if provided a and b not relatively prime."""
 
     def __init__(self, a: int, b: int, d: int, msg: Optional[str] = None):
-        super().__init__(
-            msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d)
-        )
+        super().__init__(msg or "%d and %d are not relatively prime, divider=%i" % (a, b, d))
         self.a = a
         self.b = b
         self.d = d
@@ -72,9 +67,7 @@ def bit_size(num: int) -> int:
     try:
         return bit_length(num)
     except AttributeError as err:
-        raise TypeError(
-            "bit_size(num) only supports integers, not %r" % type(num)
-        ) from err
+        raise TypeError("bit_size(num) only supports integers, not %r" % type(num)) from err
 
 
 def byte_size(number: int) -> int:
@@ -190,7 +183,7 @@ def crt(a_values: Sequence[int], modulo_values: Sequence[int]) -> int:
     for modulo in modulo_values:
         m *= modulo
 
-    for (m_i, a_i) in zip(modulo_values, a_values):
+    for m_i, a_i in zip(modulo_values, a_values):
         M_i = m // m_i
         inv = inverse(M_i, m_i)
 

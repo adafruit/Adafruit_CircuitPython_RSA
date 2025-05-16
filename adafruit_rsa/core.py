@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -13,7 +12,6 @@ This is the actual core RSA implementation, which is only defined
 mathematically on integers.
 """
 
-# pylint: disable=invalid-name
 from adafruit_rsa._compat import is_integer
 
 try:
@@ -50,7 +48,7 @@ def assert_int(var: Any, name: str) -> None:
     if is_integer(var):
         return
 
-    raise TypeError("%s should be an integer, not %s" % (name, var.__class__))
+    raise TypeError(f"{name} should be an integer, not {var.__class__}")
 
 
 def encrypt_int(message: int, ekey: int, n: int) -> int:

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # SPDX-FileCopyrightText: 2011 Sybren A. Stüvel <sybren@stuvel.eu>
 #
 # SPDX-License-Identifier: Apache-2.0
@@ -28,14 +27,14 @@ of pyasn1.
 
 import adafruit_logging as logging
 
-import adafruit_rsa.prime
-import adafruit_rsa.pem
 import adafruit_rsa.common
-import adafruit_rsa.randnum
 import adafruit_rsa.core
+import adafruit_rsa.pem
+import adafruit_rsa.prime
+import adafruit_rsa.randnum
 
 try:
-    from typing import Any, Tuple, Dict, Callable
+    from typing import Any, Callable, Dict, Tuple
 
     try:
         from typing import Literal
@@ -47,7 +46,6 @@ except ImportError:
 __version__ = "0.0.0+auto.0"
 __repo__ = "https://github.com/adafruit/Adafruit_CircuitPython_RSA.git"
 
-# pylint: disable=invalid-name, useless-object-inheritance, redefined-builtin, no-name-in-module, too-few-public-methods
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
 log.setLevel(logging.INFO)
@@ -55,7 +53,7 @@ log.setLevel(logging.INFO)
 DEFAULT_EXPONENT = 65537
 
 
-class AbstractKey(object):
+class AbstractKey:
     """Abstract superclass for private and public keys."""
 
     def __init__(self, n: int, e: int) -> None:
@@ -97,9 +95,7 @@ class AbstractKey(object):
         """
 
     @classmethod
-    def load_pkcs1(
-        cls, keyfile: bytes, format: Literal["PEM", "DER"] = "PEM"
-    ) -> "AbstractKey":
+    def load_pkcs1(cls, keyfile: bytes, format: Literal["PEM", "DER"] = "PEM") -> "AbstractKey":
         """Loads a key in PKCS#1 DER or PEM format.
 
         :param bytes keyfile: contents of a DER- or PEM-encoded file that
@@ -108,9 +104,7 @@ class AbstractKey(object):
         :return: the loaded key
         :rtype: AbstractKey
         """
-        raise NotImplementedError(
-            "Loading PEM Files not supported by this CircuitPython library."
-        )
+        raise NotImplementedError("Loading PEM Files not supported by this CircuitPython library.")
 
         # methods = {
         #    'PEM': cls._load_pkcs1_pem,
@@ -130,9 +124,7 @@ class AbstractKey(object):
             return methods[file_format]
         except KeyError as err:
             formats = ", ".join(sorted(methods.keys()))
-            raise ValueError(
-                "Unsupported format: %r, try one of %s" % (file_format, formats)
-            ) from err
+            raise ValueError(f"Unsupported format: {file_format!r}, try one of {formats}") from err
 
     def save_pkcs1(self, format: Literal["PEM", "DER"] = "PEM") -> bytes:
         """Saves the key in PKCS#1 DER or PEM format.
@@ -181,7 +173,6 @@ class AbstractKey(object):
         return (adafruit_rsa.common.inverse(r, self.n) * blinded) % self.n
 
 
-# pylint: disable=abstract-method
 class PublicKey(AbstractKey):
     """Represents a public RSA key.
 
@@ -257,10 +248,9 @@ class PublicKey(AbstractKey):
         PublicKey(2367317549, 65537)
 
         """
-        # pylint: disable=import-outside-toplevel
         try:
-            from adafruit_rsa.tools.pyasn1.codec.der import decoder
             from adafruit_rsa.asn1 import AsnPubKey
+            from adafruit_rsa.tools.pyasn1.codec.der import decoder
         except ImportError as err:
             raise ImportError("This functionality requires the pyasn1 library") from err
 
@@ -273,7 +263,6 @@ class PublicKey(AbstractKey):
         :return: the DER-encoded public key.
         :rtype: bytes
         """
-        # pylint: disable=import-outside-toplevel
         try:
             from pyasn1.codec.der import encoder
         except ImportError as err:
@@ -345,11 +334,11 @@ class PublicKey(AbstractKey):
             public key, from OpenSSL.
         :return: a PublicKey object
         """
-        # pylint: disable=import-outside-toplevel
         try:
-            from adafruit_rsa.asn1 import OpenSSLPubKey
             from pyasn1.codec.der import decoder
             from pyasn1.type import univ
+
+            from adafruit_rsa.asn1 import OpenSSLPubKey
         except ImportError as err:
             raise ImportError("This functionality requires the pyasn1 library") from err
 
@@ -387,7 +376,6 @@ class PrivateKey(AbstractKey):
 
     __slots__ = ("n", "e", "d", "p", "q", "exp1", "exp2", "coef")
 
-    # pylint: disable=too-many-arguments
     def __init__(self, n: int, e: int, d: int, p: int, q: int) -> None:
         AbstractKey.__init__(self, n, e)
         self.d = d
@@ -415,9 +403,7 @@ class PrivateKey(AbstractKey):
         """Returns the key as tuple for pickling."""
         return self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef
 
-    def __setstate__(
-        self, state: Tuple[int, int, int, int, int, int, int, int]
-    ) -> None:
+    def __setstate__(self, state: Tuple[int, int, int, int, int, int, int, int]) -> None:
         """Sets the key from tuple."""
         self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef = state
 
@@ -443,9 +429,7 @@ class PrivateKey(AbstractKey):
         return not self == other
 
     def __hash__(self) -> int:
-        return hash(
-            (self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef)
-        )
+        return hash((self.n, self.e, self.d, self.p, self.q, self.exp1, self.exp2, self.coef))
 
     def blinded_decrypt(self, encrypted: int) -> int:
         """Decrypts the message using blinding to prevent side-channel attacks.
@@ -497,7 +481,7 @@ class PrivateKey(AbstractKey):
         """
 
         try:
-            from adafruit_rsa.tools.pyasn1.codec.der import (  # pylint: disable=import-outside-toplevel
+            from adafruit_rsa.tools.pyasn1.codec.der import (
                 decoder,
             )
         except ImportError as err:
@@ -542,10 +526,9 @@ class PrivateKey(AbstractKey):
         :return: the DER-encoded private key.
         :rtype: bytes
         """
-        # pylint: disable=import-outside-toplevel
         try:
-            from pyasn1.type import univ, namedtype
             from pyasn1.codec.der import encoder
+            from pyasn1.type import namedtype, univ
         except ImportError as err:
             raise ImportError("This functionality requires the pyasn1 library") from err
 
@@ -712,8 +695,7 @@ def calculate_keys_custom_exponent(p: int, q: int, exponent: int) -> Tuple[int, 
 
     if (exponent * d) % phi_n != 1:
         raise ValueError(
-            "e (%d) and d (%d) are not mult. inv. modulo "
-            "phi_n (%d)" % (exponent, d, phi_n)
+            "e (%d) and d (%d) are not mult. inv. modulo " "phi_n (%d)" % (exponent, d, phi_n)
         )
 
     return exponent, d
