@@ -75,10 +75,10 @@ def _int2bytes(number: int, block_size: Optional[int] = None) -> bytes:
 
     # Type checking
     if not is_integer(number):
-        raise TypeError("You must pass an integer for 'number', not %s" % number.__class__)
+        raise TypeError(f"You must pass an integer for 'number', not {number.__class__}")
 
     if number < 0:
-        raise ValueError("Negative numbers cannot be used: %i" % number)
+        raise ValueError(f"Negative numbers cannot be used: {number}")
 
     # Do some bounds checking
     if number == 0:
@@ -92,7 +92,7 @@ def _int2bytes(number: int, block_size: Optional[int] = None) -> bytes:
     if block_size and block_size > 0:
         if needed_bytes > block_size:
             raise OverflowError(
-                "Needed %i bytes for number, but block size " "is %i" % (needed_bytes, block_size)
+                f"Needed {needed_bytes} bytes for number, but block size is {block_size}"
             )
 
     # Convert the number to bytes.
@@ -175,7 +175,7 @@ def int2bytes(
     """
 
     if number < 0:
-        raise ValueError("Number must be an unsigned integer: %d" % number)
+        raise ValueError(f"Number must be an unsigned integer: {number}")
 
     if fill_size and chunk_size:
         raise ValueError("You can either fill or pad chunks, but not both")
@@ -188,7 +188,7 @@ def int2bytes(
     # Pack the integer one machine word at a time into bytes.
     num = number
     word_bits, _, max_uint, pack_type = machine_size.get_word_alignment(num)
-    pack_format = ">%s" % pack_type
+    pack_format = f">{pack_type}"
     while num > 0:
         raw_bytes = pack(pack_format, num & max_uint) + raw_bytes
         num >>= word_bits
@@ -202,9 +202,7 @@ def int2bytes(
     length = len(raw_bytes)
     if fill_size and fill_size > 0:
         if not overflow and length > fill_size:
-            raise OverflowError(
-                "Need %d bytes for number, but fill size is %d" % (length, fill_size)
-            )
+            raise OverflowError(f"Need {length} bytes for number, but fill size is {fill_size}")
         raw_bytes = (b"\x00" * (fill_size - len(raw_bytes))) + raw_bytes
     elif chunk_size and chunk_size > 0:
         remainder = length % chunk_size

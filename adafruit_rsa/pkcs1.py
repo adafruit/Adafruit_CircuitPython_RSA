@@ -108,8 +108,7 @@ def _pad_for_encryption(message: bytes, target_length: int) -> bytes:
 
     if msglength > max_msglength:
         raise OverflowError(
-            "%i bytes needed for message, but there is only"
-            " space for %i" % (msglength, max_msglength)
+            f"{msglength} bytes needed for message, but there is only space for {max_msglength}"
         )
 
     # Get random padding
@@ -126,7 +125,7 @@ def _pad_for_encryption(message: bytes, target_length: int) -> bytes:
         # enough bytes, especially when needed_bytes is small
         new_padding = os.urandom(needed_bytes + 5)
         new_padding = new_padding.replace(b"\x00", b"")
-        padding = padding + new_padding[:needed_bytes]
+        padding += new_padding[:needed_bytes]
 
     assert len(padding) == padding_length
 
@@ -160,8 +159,7 @@ def _pad_for_signing(message: bytes, target_length: int) -> bytes:
 
     if msglength > max_msglength:
         raise OverflowError(
-            "%i bytes needed for message, but there is only"
-            " space for %i" % (msglength, max_msglength)
+            f"{msglength} bytes needed for message, but there is only space for {max_msglength}"
         )
 
     padding_length = target_length - msglength - 3
@@ -288,7 +286,7 @@ def sign_hash(
 
     # Get the ASN1 code for this hash method
     if hash_method not in HASH_ASN1:
-        raise ValueError("Invalid hash method: %s" % hash_method)
+        raise ValueError(f"Invalid hash method: {hash_method}")
     asn1code = HASH_ASN1[hash_method]
 
     # Encrypt the hash with the private key
@@ -415,7 +413,7 @@ def compute_hash(message: Union[bytes, str, _FileLikeObject], method_name: str) 
     """
 
     if method_name not in HASH_METHODS:
-        raise ValueError("Invalid or unsupported hash method: %s" % method_name)
+        raise ValueError(f"Invalid or unsupported hash method: {method_name}")
 
     method = HASH_METHODS[method_name]
     hasher = method()

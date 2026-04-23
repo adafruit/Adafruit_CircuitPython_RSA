@@ -70,7 +70,7 @@ def load_pem(contents: Union[bytes, str], pem_marker: Union[bytes, str]) -> byte
         # Handle start marker
         if line == pem_start:
             if in_pem_part:
-                raise ValueError('Seen start marker "%s" twice' % pem_start)
+                raise ValueError(f'Seen start marker "{pem_start}" twice')
 
             in_pem_part = True
             continue
@@ -92,10 +92,10 @@ def load_pem(contents: Union[bytes, str], pem_marker: Union[bytes, str]) -> byte
 
     # Do some sanity checks
     if not pem_lines:
-        raise ValueError('No PEM start marker "%s" found' % pem_start)
+        raise ValueError(f'No PEM start marker "{pem_start}" found')
 
     if in_pem_part:
-        raise ValueError('No PEM end marker "%s" found' % pem_end)
+        raise ValueError(f'No PEM end marker "{pem_end}" found')
 
     # Base64-decode the contents
     pem = b"".join(pem_lines)

@@ -203,7 +203,7 @@ class PublicKey(AbstractKey):
         return getattr(self, key)
 
     def __repr__(self) -> str:
-        return "PublicKey(%i, %i)" % (self.n, self.e)
+        return f"PublicKey({self.n}, {self.e})"
 
     def __getstate__(self) -> Tuple[int, int]:
         """Returns the key as tuple for pickling."""
@@ -271,8 +271,7 @@ class PublicKey(AbstractKey):
             from rsa.asn1 import AsnPubKey
         except ImportError as err:
             raise ImportError(
-                "This functionality requres the CPython rsa library, "
-                "not available in CircuitPython"
+                "This functionality requres the CPython rsa library, not available in CircuitPython"
             ) from err
 
         # Create the ASN object
@@ -391,13 +390,7 @@ class PrivateKey(AbstractKey):
         return getattr(self, key)
 
     def __repr__(self) -> str:
-        return "PrivateKey(%i, %i, %i, %i, %i)" % (
-            self.n,
-            self.e,
-            self.d,
-            self.p,
-            self.q,
-        )
+        return f"PrivateKey({self.n}, {self.e}, {self.d}, {self.p}, {self.q})"
 
     def __getstate__(self) -> Tuple[int, int, int, int, int, int, int, int]:
         """Returns the key as tuple for pickling."""
@@ -505,7 +498,7 @@ class PrivateKey(AbstractKey):
         # }
 
         if priv[0] != 0:
-            raise ValueError("Unable to read this file, version %s != 0" % priv[0])
+            raise ValueError(f"Unable to read this file, version {priv[0]} != 0")
 
         as_ints = map(int, priv[1:6])
         key = cls(*as_ints)
@@ -689,14 +682,11 @@ def calculate_keys_custom_exponent(p: int, q: int, exponent: int) -> Tuple[int, 
             exponent,
             phi_n,
             ex.d,
-            msg="e (%d) and phi_n (%d) are not relatively prime (divider=%i)"
-            % (exponent, phi_n, ex.d),
+            msg=f"e ({exponent}) and phi_n ({phi_n}) are not relatively prime (divider={ex.d})",
         )
 
     if (exponent * d) % phi_n != 1:
-        raise ValueError(
-            "e (%d) and d (%d) are not mult. inv. modulo " "phi_n (%d)" % (exponent, d, phi_n)
-        )
+        raise ValueError(f"e ({exponent}) and d ({d}) are not mult. inv. modulo phi_n ({phi_n})")
 
     return exponent, d
 
@@ -785,7 +775,7 @@ def newkeys(
         raise ValueError("Key too small")
 
     if poolsize < 1:
-        raise ValueError("Pool size (%i) should be >= 1" % poolsize)
+        raise ValueError(f"Pool size ({poolsize}) should be >= 1")
 
     if log_level == "DEBUG":
         log.setLevel(logging.DEBUG)

@@ -36,10 +36,10 @@ def fast_pow(x: int, e: int, m: int) -> int:
     while E > 0:
         if E % 2 == 0:
             X = (X * X) % m
-            E = E // 2
+            E //= 2
         else:
             Y = (X * Y) % m
-            E = E - 1
+            E -= 1
     return Y
 
 
@@ -62,7 +62,7 @@ def encrypt_int(message: int, ekey: int, n: int) -> int:
         raise ValueError("Only non-negative numbers are supported")
 
     if message > n:
-        raise OverflowError("The message %i is too long for n=%i" % (message, n))
+        raise OverflowError(f"The message {message} is too long for n={n}")
 
     # return pow(message, ekey, n)
     # print('fast_pow({},{},{})'.format(message,ekey,n))
