@@ -27,7 +27,7 @@ import adafruit_hashlib as hashlib
 from adafruit_rsa import common, core, transform
 
 try:
-    from typing import Iterator, Optional, Union
+    from typing import Iterator, Union
 
     from adafruit_rsa.key import PrivateKey, PublicKey
 
@@ -264,19 +264,17 @@ def decrypt(crypto: bytes, priv_key: PrivateKey) -> bytes:
 
 
 def sign_hash(
-    hash_value: Optional[bytes],
+    hash_value: bytes,
     priv_key: PrivateKey,
     hash_method: Literal["MD5", "SHA-1", "SHA-224", "SHA-256", "SHA-384", "SHA-512"],
 ) -> bytes:
     """Signs a precomputed hash with the private key.
 
-    Hashes the message, then signs the hash with the given key. This is known
-    as a "detached signature", because the message itself isn't altered.
+    Use ``sign()`` to hash a message before signing it.
 
-    :param bytes hash_value: A precomputed hash to sign (ignores message). Should be
-        set to ``None`` if needing to hash and sign message.
+    :param bytes hash_value: A precomputed hash to sign.
     :param PrivateKey priv_key: the :py:class:`adafruit_rsaPrivateKey` to sign with
-    :param hash_method: the hash method used on the message. Use 'MD5', 'SHA-1',
+    :param hash_method: the hash method used to compute ``hash_value``. Use 'MD5', 'SHA-1',
         'SHA-224', SHA-256', 'SHA-384' or 'SHA-512'.
     :return: a message signature block.
     :raise OverflowError: if the private key is too small to contain the
